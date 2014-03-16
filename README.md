@@ -72,5 +72,5 @@ So something like...
             bufferContainer.runCommand(cmd);
             return currentBuffer;
         }
-        return currentBuffer.runCommand(cmd);
+        return cmd(currentBuffer);
     }
