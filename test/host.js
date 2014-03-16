@@ -10,24 +10,39 @@ var assert = require('assert'),
     var controller  = new Controller(),
         interpreter = new Interpreter(controller),
 
-        // type iHello<ESC>
+        // i
+        enterInsertMode = interpreter.input({ keyCode: 73 }),
+
+        // type Hello
         bufferChanges = interpreter.input([
-            { keyCode: 73 },
             { keyCode: 72, shiftKey: true },
             { keyCode: 69 },
             { keyCode: 76 },
             { keyCode: 76 },
             { keyCode: 79 },
-            { keyCode: 219, ctrlKey: true }
-        ]);
+        ]),
+
+        // <C-[>
+        exitInsertMode = interpreter.input({ keyCode: 219, ctrlKey: true });
+
+    assert.deepEqual(enterInsertMode, {
+        cursorPosition: { row: 0, col: 0 },
+        mode: 'insert',
+    });
 
     assert.deepEqual(bufferChanges, {
         cursorPosition: { row: 0, col: 4 },
+        mode: 'insert',
         updates: [{
             index: { row: 0, col: 0 },
             length: 5,
             newValues: ['h', 'e', 'l', 'l', 'o'],
         }],
+    });
+
+    assert.deepEqual(bufferChanges, {
+        cursorPosition: { row: 0, col: 4 },
+        mode: 'normal',
     });
 
     assert.deepEqual(controller.currentBuffer.state,

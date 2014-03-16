@@ -1,5 +1,5 @@
 (function (exports) {
-    "use strict";
+    'use strict';
 
     exports.Controller = (function ControllerClosure() {
 
