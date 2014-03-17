@@ -10,28 +10,19 @@ var assert = require('assert'),
     var controller  = new Controller(),
         interpreter = new Interpreter(controller),
 
-        // i
-        enterInsertMode = interpreter.input({ keyCode: 73 }),
+        enterInsertMode = interpreter.input('i'),
 
-        // type Hello
-        bufferChanges = interpreter.input([
-            { keyCode: 72, shiftKey: true },
-            { keyCode: 69 },
-            { keyCode: 76 },
-            { keyCode: 76 },
-            { keyCode: 79 },
-        ]),
+        bufferChanges = interpreter.sequence(['H', 'e', 'l', 'l', 'o']),
 
-        // <C-[>
-        exitInsertMode = interpreter.input({ keyCode: 219, ctrlKey: true });
+        exitInsertMode = interpreter.input('<ESC>');
 
     assert.deepEqual(enterInsertMode, {
-        cursorPosition: { row: 0, col: 0 },
+        cursor: { row: 0, col: 0 },
         mode: 'insert',
     });
 
     assert.deepEqual(bufferChanges, {
-        cursorPosition: { row: 0, col: 4 },
+        cursor: { row: 0, col: 4 },
         mode: 'insert',
         updates: [{
             index: { row: 0, col: 0 },
@@ -41,11 +32,11 @@ var assert = require('assert'),
     });
 
     assert.deepEqual(bufferChanges, {
-        cursorPosition: { row: 0, col: 4 },
+        cursor: { row: 0, col: 4 },
         mode: 'normal',
     });
 
     assert.deepEqual(controller.currentBuffer.state,
-        [['h', 'e', 'l', 'l', 'o']]);
+        [['H', 'e', 'l', 'l', 'o']]);
 
 }());
