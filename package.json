@@ -5,7 +5,7 @@
   "main": "test/host.js",
   "scripts": {
     "test": "jslint *.js",
-    "start": "node test/host.js"
+    "start": "node test/main.js"
   },
   "keywords": [
     "editor"
