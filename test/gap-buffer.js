@@ -6,29 +6,47 @@ var assert      = require('assert'),
 
 exports.tests = [
     function GapBuffer_insert() {
-        var gapBuffer = new GapBuffer();
+        var gapBuffer = new GapBuffer(", world");
 
-        assert.strictEqual(gapBuffer.read(), "");
+        assert.strictEqual(gapBuffer.read(), ", world");
 
-        gapBuffer.insert('H');
-        gapBuffer.insert('e');
-        gapBuffer.insert('l');
-        gapBuffer.insert('l');
-        gapBuffer.insert('o');
+        gapBuffer
+            .insert('H')
+            .insert('e')
+            .insert('l')
+            .insert('l')
+            .insert('o');
 
-        assert.strictEqual(gapBuffer.read(), "Hello");
+        assert.strictEqual(gapBuffer.read(), "Hello, world");
     },
+
     function GapBuffer_update() {
-        assert.fail();
+        var gapBuffer = new GapBuffer("Hello, world");
+
+        gapBuffer.cursorForward();
+        gapBuffer.update("u");
+
+        assert.strictEqual(gapBuffer.cursorCurrent(), "u");
+        assert.strictEqual(gapBuffer.read(), "Hullo, world");
     },
+
     function GapBuffer_delete() {
-        assert.fail();
+        var gapBuffer = new GapBuffer("Hello, world");
+
+        gapBuffer.cursorForward();
+        gapBuffer.cursorForward();
+        gapBuffer.cursorForward();
+
+        assert.strictEqual(gapBuffer.cut(), "l");
+        assert.strictEqual(gapBuffer.read(), "Helo, world");
     },
+
     function GapBuffer_read() {
         var gapBuffer = new GapBuffer("Hello, world");
 
         assert.strictEqual(gapBuffer.read(), "Hello, world");
     },
+
     function GapBuffer_cursor() {
         var gapBuffer = new GapBuffer("Hello");
 

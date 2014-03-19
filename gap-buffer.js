@@ -4,58 +4,64 @@
     exports.GapBuffer = (function GapBufferClosure() {
 
         function GapBuffer(after) {
-            this.before = '';
-            this.after = after || '';
+            // Actually implemented as 2 stacks rather than the
+            // traditional giant split buffer with pointers.
+            // The 'after' stack is reversed,
+            // for O(1) insertion at the front.
+            this.before = [];
+            this.after = after.split('').reverse() || [];
         }
 
         GapBuffer.prototype.cursorCurrent = function () {
-            return this.after[0];
+            return this.after[this.after.length - 1];
         };
 
         GapBuffer.prototype.cursorForward = function () {
+            // moves a char from after to before
+            var movedChar;
 
-            console.log("forward1", "before: ", this.before, ", after:",  this.after);
-
-            if (this.after.length === 0) {
-                return this.before[this.before.length - 1];
+            // 'stick' at the end of the buffer
+            if (this.after.length > 1) {
+                movedChar = this.after.pop();
             }
 
-            this.before += this.after[0];
-            this.after = this.after.substring(1);
+            if (movedChar) {
+                this.before.push(movedChar);
+            }
 
-            console.log("forward2", "before: ", this.before, ", after:",  this.after);
-
-            return this.after[0];
+            return this.cursorCurrent();
         };
 
         GapBuffer.prototype.cursorBack = function () {
+            var movedChar = this.before.pop();
 
-            console.log("back", "before: ", this.before, ", after:",  this.after);
-
-            var lastIndex;
-
-            if (this.before.length === 0) {
-                return this.after[0];
+            if (movedChar) {
+                this.after.push(movedChar);
             }
 
-            lastIndex = this.before.length - 1;
-
-            this.after = this.before[lastIndex] + this.after;
-            this.before = this.before.substring(0, lastIndex);
-            return this.after[0];
+            return this.cursorCurrent();
         };
 
         GapBuffer.prototype.read = function () {
-            return this.before + this.after;
+
+            return this.before
+                .concat(this.after.slice(0).reverse())
+                .join('');
         };
 
         GapBuffer.prototype.insert = function (character) {
+            this.before.push(character);
+            return this;
         };
 
         GapBuffer.prototype.update = function (character) {
+            this.after.pop();
+            this.after.push(character);
+            return this;
         };
 
-        GapBuffer.prototype.clear = function (character) {
+        GapBuffer.prototype.cut = function () {
+            return this.after.pop();
         };
 
         return GapBuffer;
