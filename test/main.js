@@ -2,8 +2,9 @@
 'use strict';
 
 var testSuites = [
-    require('./gap-buffer.js'),
-    require('./host.js'),
+    require('./gap-buffer'),
+    require('./host'),
+    require('./buffer-router'),
 ];
 
 testSuites.forEach(function (suite) {

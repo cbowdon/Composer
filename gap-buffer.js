@@ -9,7 +9,7 @@
             // The 'after' stack is reversed,
             // for O(1) insertion at the front.
             this.before = [];
-            this.after = after.split('').reverse() || [];
+            this.after = after ? after.split('').reverse() : [];
         }
 
         GapBuffer.prototype.cursorCurrent = function () {
