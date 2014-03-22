@@ -22,14 +22,19 @@ The idea is to make an editor that:
 * Host application
     - Provides the display.
     - Captures keyboard input.
+* Key input shim
+    - Translates between the key defs (e.g. <ESC>) and the host (e.g. browser events)
+* Mode controller
+    - Contains the macro registers.
+    - Contains the yank registers.
+* Mode intercepter
+    - Gets first look at input
 * Command interpreter
     - Matches input key(s) to a command.
     - Has some reference to user-defined extension functions.
     - Rejects bad input.
-* Controller
+* Buffer router
     - Contains multiple buffers, understands commands to change between them, add new, etc.
-    - Contains the macro registers.
-    - Contains the yank registers.
     - Passes any other commands directly to the...
 * Buffer
     - Accepts commands and returns the effect this has on buffer state.
@@ -37,6 +42,92 @@ The idea is to make an editor that:
     - Stores marks.
     - Stores the sequence of commands and effects.
     - Stores cursor location/highlights.
+
+
+### Scenarios
+
+#### I've pressed the 'i' key
+
+- The shim translates { keyCode: 65 }  to... 'i'
+
+_What mode are we in?_
+- We're in normal mode, direct to normal handler.
+
+_Is the action stack empty?_
+- Yes, lookup the **i** action (an object).
+
+_Is that a complete action?_
+- The **i** action has a **complete** property that is **true** (or equivalent).
+
+_What does the action have to do?_
+- Change the mode, only.
+- The object has an **action** property that is a function to do this.
+
+**...**
+
+#### I've pressed the 'c' key
+
+- The shim translates { keyCode: 58 }  to... 'c'
+
+_What mode are we in?_
+- We're in normal mode, direct to normal handler.
+
+_Is the action stack empty?_
+- Yes, lookup the **c** action (an object).
+
+_Is that a complete action?_
+- The **c** action has a **complete** property that is **false** (or equivalent).
+- The **c** action has a **accepts** property that is **action**.
+
+_What do we have to do?_
+- Put the action on the stack.
+- Await further input of type **action**.
+
+#### I've pressed the 't' key
+
+- The shim translates { keyCode: 70 }  to... 't'
+
+_What mode are we in?_
+- We're in normal mode, direct to normal handler.
+
+_Is the action stack empty?_
+- No. The **c** action is at the top of the stack.
+
+_What kind of argument does the action at the top of the stack accept?_
+- An **action**.
+- Lookup the **t** action (an object).
+
+_Is that a complete action?_
+- The **t** action has a **complete** property that is **false** (or equivalent).
+- The **t** action has a **accepts** property that is **literal**.
+
+_What do we have to do?_
+- Put the action on the stack.
+- Await further input of type **literal**.
+
+#### I've pressed the 'x' key
+
+- The shim translates { keyCode: 80 }  to... 'x'
+
+_What mode are we in?_
+- We're in normal mode, direct to normal handler.
+
+_Is the action stack empty?_
+- No. The **t** action is at the top of the stack.
+
+_What kind of argument does the action at the top of the stack accept?_
+- A **literal**.
+- Accept **x** as a literal.
+
+_Is that a complete action?_
+- Literals are always complete.
+
+_What do we have to do?_
+- Let's evaluate the stack!
+- **t** is on top, accepting an argument of **x** (literal).
+- Evaluate **t('x')** - it returns a region.
+- Pass this region to the next item on the stack, **c**.
+- Evaluate **c(t('x'))**.
 
 So something like...
 

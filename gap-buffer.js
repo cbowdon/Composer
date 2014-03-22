@@ -1,71 +1,68 @@
-(function (exports) {
-    'use strict';
+'use strict';
 
-    exports.GapBuffer = (function GapBufferClosure() {
+module.exports.GapBuffer = (function GapBufferClosure() {
 
-        function GapBuffer(after) {
-            // Actually implemented as 2 stacks rather than the
-            // traditional giant split buffer with pointers.
-            // The 'after' stack is reversed,
-            // for O(1) insertion at the front.
-            this.before = [];
-            this.after = after ? after.split('').reverse() : [];
+    function GapBuffer(after) {
+        // Actually implemented as 2 stacks rather than the
+        // traditional giant split buffer with pointers.
+        // The 'after' stack is reversed,
+        // for O(1) insertion at the front.
+        this.before = [];
+        this.after = after ? after.split('').reverse() : [];
+    }
+
+    GapBuffer.prototype.cursorCurrent = function () {
+        return this.after[this.after.length - 1];
+    };
+
+    GapBuffer.prototype.cursorForward = function () {
+        // moves a char from after to before
+        var movedChar;
+
+        // 'stick' at the end of the buffer
+        if (this.after.length > 1) {
+            movedChar = this.after.pop();
         }
 
-        GapBuffer.prototype.cursorCurrent = function () {
-            return this.after[this.after.length - 1];
-        };
+        if (movedChar) {
+            this.before.push(movedChar);
+        }
 
-        GapBuffer.prototype.cursorForward = function () {
-            // moves a char from after to before
-            var movedChar;
+        return this.cursorCurrent();
+    };
 
-            // 'stick' at the end of the buffer
-            if (this.after.length > 1) {
-                movedChar = this.after.pop();
-            }
+    GapBuffer.prototype.cursorBack = function () {
+        var movedChar = this.before.pop();
 
-            if (movedChar) {
-                this.before.push(movedChar);
-            }
+        if (movedChar) {
+            this.after.push(movedChar);
+        }
 
-            return this.cursorCurrent();
-        };
+        return this.cursorCurrent();
+    };
 
-        GapBuffer.prototype.cursorBack = function () {
-            var movedChar = this.before.pop();
+    GapBuffer.prototype.read = function () {
 
-            if (movedChar) {
-                this.after.push(movedChar);
-            }
+        return this.before
+            .concat(this.after.slice(0).reverse())
+            .join('');
+    };
 
-            return this.cursorCurrent();
-        };
+    GapBuffer.prototype.insert = function (character) {
+        this.before.push(character);
+        return this;
+    };
 
-        GapBuffer.prototype.read = function () {
+    GapBuffer.prototype.update = function (character) {
+        this.after.pop();
+        this.after.push(character);
+        return this;
+    };
 
-            return this.before
-                .concat(this.after.slice(0).reverse())
-                .join('');
-        };
+    GapBuffer.prototype.cut = function () {
+        return this.after.pop();
+    };
 
-        GapBuffer.prototype.insert = function (character) {
-            this.before.push(character);
-            return this;
-        };
+    return GapBuffer;
 
-        GapBuffer.prototype.update = function (character) {
-            this.after.pop();
-            this.after.push(character);
-            return this;
-        };
-
-        GapBuffer.prototype.cut = function () {
-            return this.after.pop();
-        };
-
-        return GapBuffer;
-
-    }());
-
-}(this));
+}());
