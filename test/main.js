@@ -5,6 +5,7 @@ var testSuites = [
     require('./gap-buffer'),
     require('./host'),
     require('./buffer-router'),
+    require('./normal-functions'),
 ];
 
 testSuites.forEach(function (suite) {

@@ -41,8 +41,25 @@ module.exports.GapBuffer = (function GapBufferClosure() {
         return this.cursorCurrent();
     };
 
-    GapBuffer.prototype.read = function () {
+    GapBuffer.prototype.cursorPeek = function () {
+        return this.after[this.after.length - 2];
+    };
 
+    GapBuffer.prototype.cursorStart = function () {
+        while (this.before.length > 0) {
+            this.cursorBack();
+        }
+        return this.cursorCurrent();
+    };
+
+    GapBuffer.prototype.cursorEnd = function () {
+        while (this.after.length > 1) {
+            this.cursorForward();
+        }
+        return this.cursorCurrent();
+    };
+
+    GapBuffer.prototype.read = function () {
         return this.before
             .concat(this.after.slice(0).reverse())
             .join('');

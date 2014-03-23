@@ -17,33 +17,6 @@ The idea is to make an editor that:
 - Immutable data and functional approach to be default: OO and mutable state to be wheeled out when beneficial.
 - ES5, no messing around with TypeScript today.
 
-### Flow...
-
-* Host application
-    - Provides the display.
-    - Captures keyboard input.
-* Key input shim
-    - Translates between the key defs (e.g. <ESC>) and the host (e.g. browser events)
-* Mode controller
-    - Contains the macro registers.
-    - Contains the yank registers.
-* Mode intercepter
-    - Gets first look at input
-* Command interpreter
-    - Matches input key(s) to a command.
-    - Has some reference to user-defined extension functions.
-    - Rejects bad input.
-* Buffer router
-    - Contains multiple buffers, understands commands to change between them, add new, etc.
-    - Passes any other commands directly to the...
-* Buffer
-    - Accepts commands and returns the effect this has on buffer state.
-    - Makes the entire buffer available to read.
-    - Stores marks.
-    - Stores the sequence of commands and effects.
-    - Stores cursor location/highlights.
-
-
 ### Scenarios
 
 #### I've pressed the 'i' key
@@ -75,13 +48,13 @@ _What mode are we in?_
 _Is the action stack empty?_
 - Yes, lookup the **c** action (an object).
 
-_Is that a complete action?_
-- The **c** action has a **complete** property that is **false** (or equivalent).
-- The **c** action has a **accepts** property that is **action**.
+_What type of action is that?_
+- The **c** action is a **verb**.
+- The **c** action has a **accepts** property that is **noun**.
 
 _What do we have to do?_
 - Put the action on the stack.
-- Await further input of type **action**.
+- Await further input of type **noun**.
 
 #### I've pressed the 't' key
 
@@ -91,15 +64,14 @@ _What mode are we in?_
 - We're in normal mode, direct to normal handler.
 
 _Is the action stack empty?_
-- No. The **c** action is at the top of the stack.
+- No. The **c** verb is at the top of the stack.
 
 _What kind of argument does the action at the top of the stack accept?_
-- An **action**.
-- Lookup the **t** action (an object).
+- A **noun**.
+- Lookup **t** in the nouns dictionary.
 
 _Is that a complete action?_
-- The **t** action has a **complete** property that is **false** (or equivalent).
-- The **t** action has a **accepts** property that is **literal**.
+- No. The **t** action has a **accepts** property that is **literal**.
 
 _What do we have to do?_
 - Put the action on the stack.
@@ -129,39 +101,4 @@ _What do we have to do?_
 - Pass this region to the next item on the stack, **c**.
 - Evaluate **c(t('x'))**.
 
-So something like...
-
-    host.keyPressEventHandler(key => {
-        let bufferChanges = commandInterpreter.input(key)
-        host.bufferUI.applyChange(bufferChanges);
-    });
-
-    ...
-
-    commandInterpreter.input = key => {
-        stack.push(key);
-        let cmd = commands.lookup(stack);
-        return cmd.isComplete ?
-            controller.runCommand(cmd) :
-            noChange;
-    }
-
-    ...
-
-    controller.runCommand = cmd => {
-        if (isMacroStop(cmd)) {
-            isMacroRecording = false;
-        }
-        if (isMacroStart(cmd)) {
-            currentMacroRegister = registers[cmd.registerName];
-            currentMacroRegister = [];
-        }
-        if (isMacroRecording) {
-            currentMacroRegister.push(cmd);
-        }
-        if (isBufferCmd(cmd)) {
-            bufferContainer.runCommand(cmd);
-            return currentBuffer;
-        }
-        return cmd(currentBuffer);
-    }
+**...**

@@ -61,4 +61,32 @@ exports.tests = [
         assert.strictEqual(gapBuffer.cursorForward(), "o", 8);
         assert.strictEqual(gapBuffer.cursorBack(), "l", 9);
     },
+
+    function GapBuffer_cursorPeek() {
+        var gapBuffer = new GapBuffer("Hello");
+
+        assert.strictEqual(gapBuffer.cursorCurrent(), "H", 0);
+        assert.strictEqual(gapBuffer.cursorForward(), "e", 1);
+        assert.strictEqual(gapBuffer.cursorPeek(), "l", 2);
+    },
+
+    function GapBuffer_cursorStart() {
+        var gapBuffer = new GapBuffer("Hello");
+
+        gapBuffer.cursorForward();
+        gapBuffer.cursorForward();
+        gapBuffer.cursorForward();
+
+        assert.strictEqual(gapBuffer.cursorStart(), "H");
+    },
+
+    function GapBuffer_cursorEnd() {
+        var gapBuffer = new GapBuffer("Hello");
+
+        gapBuffer.cursorForward();
+        gapBuffer.cursorForward();
+        gapBuffer.cursorForward();
+
+        assert.strictEqual(gapBuffer.cursorEnd(), "o");
+    },
 ];
