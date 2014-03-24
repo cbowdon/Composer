@@ -89,4 +89,17 @@ exports.tests = [
 
         assert.strictEqual(gapBuffer.cursorEnd(), "o");
     },
+
+    function GapBuffer_lookBack() {
+        var gapBuffer = new GapBuffer("Hello");
+
+        gapBuffer.cursorForward();
+        assert.strictEqual(1, 0);
+    },
+
+    function GapBuffer_lookForward() {
+        var gapBuffer = new GapBuffer("Hello");
+
+        assert.strictEqual(1, 0);
+    },
 ];

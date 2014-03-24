@@ -29,12 +29,10 @@ exports.tests = [
 
         buffer.text.cursorForward();
 
-        next = hRegion.next();
-        assert.strictEqual(next.value, 'H');
-        assert.strictEqual(next.done, false);
-
-        next = hRegion.next();
-        assert.strictEqual(next.done, true);
+        assert.deepEqual(hRegion(), {
+            direction: 'back',
+            count: 1
+        });
     },
 
     function NormalFunctions_motions_l() {
@@ -43,52 +41,32 @@ exports.tests = [
             lRegion = l.action(buffer),
             next;
 
-        next = lRegion.next();
-        assert.strictEqual(next.value, 'e');
-        assert.strictEqual(next.done, false);
-
-        next = lRegion.next();
-        assert.strictEqual(next.done, true);
+        assert.deepEqual(lRegion(), {
+            direction: 'forward',
+            count: 1
+        });
     },
 
     function NormalFunctions_motions_f() {
         var buffer  = helloBuffer(),
             f       = normal.motions.f,
-            region  = f.action(buffer, 'l'),
-            next;
+            region  = f.action(buffer, 'l');
 
-        next = region.next();
-        assert.strictEqual(next.value, 'H');
-        assert.strictEqual(next.done, false);
-
-        next = region.next();
-        assert.strictEqual(next.value, 'e');
-        assert.strictEqual(next.done, false);
-
-        next = region.next();
-        assert.strictEqual(next.value, 'l');
-        assert.strictEqual(next.done, false);
-
-        next = region.next();
-        assert.strictEqual(next.done, true);
+        assert.deepEqual(region(), {
+            direction: 'forward',
+            count: 3
+        });
     },
 
     function NormalFunctions_motions_t() {
         var buffer  = helloBuffer(),
             t       = normal.motions.t,
-            region  = t.action(buffer, 'l'),
-            next;
+            region  = t.action(buffer, 'l');
 
-        next = region.next();
-        assert.strictEqual(next.value, 'H');
-        assert.strictEqual(next.done, false);
-
-        next = region.next();
-        assert.strictEqual(next.value, 'e');
-        assert.strictEqual(next.done, false);
-
-        next = region.next();
-        assert.strictEqual(next.done, true);
+        assert.deepEqual(region(), {
+            direction: 'forward',
+            count: 2
+        });
     },
 
     function NormalFunctions_operators_d() {
