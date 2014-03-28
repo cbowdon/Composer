@@ -1,10 +1,12 @@
 /*jslint node: true */
+/*globals describe, it */
 'use strict';
 
 var assert      = require('assert'),
     GapBuffer   = require('../gap-buffer').GapBuffer;
 
 exports.tests = [
+
     function GapBuffer_insert() {
         var gapBuffer = new GapBuffer(", world");
 
@@ -90,16 +92,27 @@ exports.tests = [
         assert.strictEqual(gapBuffer.cursorEnd(), "o");
     },
 
-    function GapBuffer_lookBack() {
+    function GapBuffer_findForward() {
         var gapBuffer = new GapBuffer("Hello");
 
         gapBuffer.cursorForward();
-        assert.strictEqual(1, 0);
+
+        assert.strictEqual(gapBuffer.findForward('H'), -1, "H");
+        assert.strictEqual(gapBuffer.findForward('e'), 0, "e");
+        assert.strictEqual(gapBuffer.findForward('l'), 1, "l");
+        assert.strictEqual(gapBuffer.findForward('o'), 3, "o");
     },
 
-    function GapBuffer_lookForward() {
+    function GapBuffer_findBack() {
         var gapBuffer = new GapBuffer("Hello");
 
-        assert.strictEqual(1, 0);
+        gapBuffer.cursorForward();
+        gapBuffer.cursorForward();
+        gapBuffer.cursorForward();
+
+        assert.strictEqual(gapBuffer.findBack('H'), 3, "H");
+        assert.strictEqual(gapBuffer.findBack('e'), 2, "e");
+        assert.strictEqual(gapBuffer.findBack('l'), 0, "l");
+        assert.strictEqual(gapBuffer.findBack('o'), -1, "o");
     },
 ];

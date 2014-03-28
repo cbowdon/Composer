@@ -8,13 +8,13 @@ var assert = require('assert'),
 function helloBuffer() {
     var buffer  = new Buffer();
 
-    buffer.text.insert('H');
-    buffer.text.insert('e');
-    buffer.text.insert('l');
-    buffer.text.insert('l');
-    buffer.text.insert('o');
+    buffer.insert('H');
+    buffer.insert('e');
+    buffer.insert('l');
+    buffer.insert('l');
+    buffer.insert('o');
 
-    buffer.text.cursorStart();
+    buffer.cursorStart();
 
     return buffer;
 }
@@ -27,7 +27,7 @@ exports.tests = [
             hRegion = h.action(buffer),
             next;
 
-        buffer.text.cursorForward();
+        buffer.cursorForward();
 
         assert.deepEqual(hRegion(), {
             direction: 'back',
@@ -80,6 +80,6 @@ exports.tests = [
 
         assert.deepEqual(dtl, ['H', 'e']);
 
-        assert.strictEqual(buffer.text.read(), "llo");
+        assert.strictEqual(buffer.read(), "llo");
     },
 ];

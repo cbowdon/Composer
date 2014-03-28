@@ -4,8 +4,8 @@
   "description": "A composable code editor.",
   "main": "test/host.js",
   "scripts": {
-    "test": "jslint *.js",
-    "start": "node test/main.js"
+    "test": "jslint *.js test/*.js; node test/main.js",
+    "start": "browserify main.js -o dist/composer-demo.js"
   },
   "keywords": [
     "editor"

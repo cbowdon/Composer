@@ -17,6 +17,26 @@ The idea is to make an editor that:
 - Immutable data and functional approach to be default: OO and mutable state to be wheeled out when beneficial.
 - ES5, no messing around with TypeScript today.
 
+### Roadmap
+Agile - release a turd, then polish. Paraphrasing slightly.
+
+* v0.0.x
+- Insert mode.
+- Basic GUI, keyboard input setup.
+
+* v0.1.x
+- Adds normal mode cursor movement.
+
+* v0.2.x
+- Adds normal mode operators like change and delete.
+
+* v0.3.x
+- Adds command mode.
+
+* v0.4.x
+- Adds multiple buffers.
+
+
 ### Scenarios
 
 #### I've pressed the 'i' key

@@ -2,16 +2,26 @@
 'use strict';
 
 module.exports.KeyHandler = (function KeyHandlerClosure() {
-
     function convert(keyEvent) {
-        return 'z';
+        var code = keyEvent.keyCode,
+            character;
+        if (keyEvent.shiftKey) {
+            code += 32;
+        }
+        character = String.fromCharCode(code);
+        return keyEvent.ctrlKey ?
+            '<C-' + character + '>' :
+            character;
     }
 
     function KeyHandler(document) {
+        var that = this;
         this.listeners = {};
 
         document.addEventListener('keyup', function (keyEvent) {
-            this.fireListeners('keypress', convert(keyEvent));
+            var character = convert(keyEvent);
+            console.log(keyEvent, character);
+            that.fireListeners('input', character);
         });
     }
 
@@ -24,11 +34,11 @@ module.exports.KeyHandler = (function KeyHandlerClosure() {
 
     KeyHandler.prototype.fireListeners = function (eventName, arg) {
         if (this.listeners.hasOwnProperty(eventName)) {
-           this.listeners.eventName.forEach(function (listener) {
-               listener(arg);
-           });
+            this.listeners.eventName.forEach(function (listener) {
+                listener(arg);
+            });
         }
     };
 
-    return KeyHandler();
+    return KeyHandler;
 }());

@@ -9,7 +9,7 @@ module.exports.InsertInterpreter = (function InsertInterpreterClosure() {
 
     InsertInterpreter.prototype.input = function (character) {
         if (character.length === 1) {
-            this.buffer.text.insert(character);
+            this.buffer.insert(character);
         }
     };
 

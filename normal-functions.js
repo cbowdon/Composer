@@ -78,7 +78,7 @@ module.exports.operators = {
             var clip = [], i;
 
             for (i = 0; i < region.count; i += 1) {
-                clip.push(buffer.text.cut());
+                clip.push(buffer.cut());
             }
 
             return clip;

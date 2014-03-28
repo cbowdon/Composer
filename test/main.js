@@ -3,7 +3,6 @@
 
 var testSuites = [
     require('./gap-buffer'),
-    require('./host'),
     require('./buffer-router'),
     require('./normal-functions'),
 ];
@@ -12,9 +11,9 @@ testSuites.forEach(function (suite) {
     suite.tests.forEach(function (test) {
         try {
             test();
-            console.log(test.name, "- OK\n");
+            console.log(test.name, "- OK");
         } catch (ex) {
-            console.log(test.name, '\n', ex, '\n');
+            console.log(test.name, '\n', ex);
         }
     });
 });

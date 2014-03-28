@@ -1,0 +1,9 @@
+.line {
+  height: 12px;
+  border: 1px solid black;
+}
+
+.col {
+  width: 6px;
+  border: 1px solid black;
+}
