@@ -10,6 +10,7 @@ module.exports.Buffer = (function BufferClosure() {
     }
 
     Buffer.prototype = GapBuffer.prototype;
+    Buffer.prototype.constructor = Buffer;
 
     return Buffer;
 

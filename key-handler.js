@@ -1,6 +1,8 @@
 /*jslint node: true */
 'use strict';
 
+var publisher = require('./publisher');
+
 module.exports.KeyHandler = (function KeyHandlerClosure() {
     function convert(keyEvent) {
         var code = keyEvent.keyCode,
@@ -16,29 +18,16 @@ module.exports.KeyHandler = (function KeyHandlerClosure() {
 
     function KeyHandler(document) {
         var that = this;
-        this.listeners = {};
+
+        publisher.call(this);
 
         document.addEventListener('keyup', function (keyEvent) {
             var character = convert(keyEvent);
             console.log(keyEvent, character);
             that.fireListeners('input', character);
         });
+
     }
-
-    KeyHandler.prototype.addEventListener = function (eventName, listener) {
-        if (!this.listeners.hasOwnProperty(eventName)) {
-            this.listeners.eventName = [];
-        }
-        this.listeners.eventName.push(listener);
-    };
-
-    KeyHandler.prototype.fireListeners = function (eventName, arg) {
-        if (this.listeners.hasOwnProperty(eventName)) {
-            this.listeners.eventName.forEach(function (listener) {
-                listener(arg);
-            });
-        }
-    };
 
     return KeyHandler;
 }());

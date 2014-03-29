@@ -1,6 +1,8 @@
 /*jslint node: true */
 'use strict';
 
+var publisher = require('./publisher');
+
 module.exports.GapBuffer = (function GapBufferClosure() {
 
     function reverseIndex(array, value) {
@@ -21,23 +23,8 @@ module.exports.GapBuffer = (function GapBufferClosure() {
         this.before = [];
         this.after = after ? after.split('').reverse() : [];
 
-        this.listeners = {};
+        publisher.call(this);
     }
-
-    GapBuffer.prototype.addEventListener = function (eventName, listener) {
-        if (!this.listeners.hasOwnProperty(eventName)) {
-            this.listeners.eventName = [];
-        }
-        this.listeners.eventName.push(listener);
-    };
-
-    GapBuffer.prototype.fireListeners = function (eventName, arg) {
-        if (this.listeners.hasOwnProperty(eventName)) {
-            this.listeners.eventName.forEach(function (listener) {
-                listener(arg);
-            });
-        }
-    };
 
     GapBuffer.prototype.cursorCurrent = function () {
         return this.after[this.after.length - 1];

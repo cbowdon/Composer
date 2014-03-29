@@ -5,6 +5,7 @@ var testSuites = [
     require('./gap-buffer'),
     require('./buffer-router'),
     require('./normal-functions'),
+    require('./publisher'),
 ];
 
 testSuites.forEach(function (suite) {
