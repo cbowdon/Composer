@@ -38,7 +38,7 @@ module.exports.Visualizer = (function VisualizerClosure() {
         for (i = 0; i < this.rows; i += 1) {
             for (j = 0; j < this.cols; j += 1) {
                 $cell = $('#r' + i + 'c' + j);
-                $cell.html(bufferText[i + j]);
+                $cell.html(bufferText[i * this.rows + j]);
             }
         }
     };

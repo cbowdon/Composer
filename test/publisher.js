@@ -6,7 +6,7 @@ var assert    = require('assert'),
 
 exports.tests = [
     function Publisher_addEventListener() {
-        var pub = publisher.call({});
+        var pub = Object.defineProperties({}, publisher);
 
         pub.addEventListener('pop', function () {
             return 'weasel';
@@ -17,7 +17,7 @@ exports.tests = [
         assert.strictEqual(pub.listeners.pop.length, 1);
     },
     function Publisher_fireListeners() {
-        var pub       = publisher.call({}),
+        var pub       = Object.defineProperties({}, publisher),
             callCount = 0,
             testArg = null;
 

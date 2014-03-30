@@ -22,9 +22,9 @@ module.exports.GapBuffer = (function GapBufferClosure() {
         // for O(1) insertion at the front.
         this.before = [];
         this.after = after ? after.split('').reverse() : [];
-
-        publisher.call(this);
     }
+
+    Object.defineProperties(GapBuffer.prototype, publisher);
 
     GapBuffer.prototype.cursorCurrent = function () {
         return this.after[this.after.length - 1];
