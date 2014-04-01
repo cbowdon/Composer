@@ -5,25 +5,30 @@ var $           = require('jquery'),
     publisher   = require('./publisher');
 
 module.exports.KeyHandler = (function KeyHandlerClosure() {
+
     function convert(keyEvent) {
         var code = keyEvent.charCode,
+            key  = keyEvent.key,
             character;
 
-        if (keyEvent.shiftKey) {
-            code += 32;
+        if (code !== 0) {
+            character = String.fromCharCode(code);
+        } else if (key === 'Enter') {
+            character = '<CR>';
+        } else if (code === 0) {
+            character = '<' + key + '>';
         }
 
-        character = String.fromCharCode(code);
-
+        if (keyEvent.ctrlKey && keyEvent.altKey) {
+            return '<C-M-' + character + '>';
+        }
         if (keyEvent.ctrlKey) {
             return '<C-' + character + '>';
-        }
-        if (keyEvent.metaKey) {
-            return '<S-' + character + '>';
         }
         if (keyEvent.altKey) {
             return '<M-' + character + '>';
         }
+
         return character;
     }
 
@@ -32,7 +37,10 @@ module.exports.KeyHandler = (function KeyHandlerClosure() {
 
         $(document).keypress(function (keyEvent) {
             var character = convert(keyEvent);
-            keyEvent.preventDefault();
+            console.log(character, keyEvent.key, keyEvent.charCode, keyEvent);
+            if (!keyEvent.metaKey) {
+                keyEvent.preventDefault();
+            }
             that.fireListeners('input', character);
         });
     }
