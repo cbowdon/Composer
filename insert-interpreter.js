@@ -11,6 +11,19 @@ module.exports.InsertInterpreter = (function InsertInterpreterClosure() {
         if (character.length === 1) {
             this.buffer.insert(character);
         }
+        if (character === '<CR>') {
+          this.buffer.insert('\n');
+        }
+        if (character === '<Tab>') {
+          this.insertTab();
+        }
+    };
+
+    InsertInterpreter.prototype.insertTab = function () {
+        this.buffer.insert(' ');
+        this.buffer.insert(' ');
+        this.buffer.insert(' ');
+        this.buffer.insert(' ');
     };
 
     return InsertInterpreter;

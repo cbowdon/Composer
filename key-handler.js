@@ -11,13 +11,13 @@ module.exports.KeyHandler = (function KeyHandlerClosure() {
             key  = keyEvent.key,
             character;
 
-        if (code !== 0) {
-            character = String.fromCharCode(code);
-        } else if (key === 'Enter') {
-            character = '<CR>';
-        } else if (code === 0) {
-            character = '<' + key + '>';
+        if (code === 0) {
+            return key === 'Enter' ?
+                '<CR>' :
+                '<' + key + '>';
         }
+
+        character = String.fromCharCode(code);
 
         if (keyEvent.ctrlKey && keyEvent.altKey) {
             return '<C-M-' + character + '>';

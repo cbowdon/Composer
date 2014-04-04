@@ -15,13 +15,17 @@ module.exports.GapBuffer = (function GapBufferClosure() {
         return -1;
     }
 
-    function GapBuffer(after) {
+    function GapBuffer(text) {
         // Actually implemented as 2 stacks rather than the
         // traditional giant split buffer with pointers.
         // The 'after' stack is reversed,
         // for O(1) insertion at the front.
         this.before = [];
-        this.after = after ? after.split('').reverse() : [];
+        this.after = [];
+
+        if (text) {
+            this.load(text);
+        }
     }
 
     Object.defineProperties(GapBuffer.prototype, publisher);
@@ -74,12 +78,6 @@ module.exports.GapBuffer = (function GapBufferClosure() {
         return this.cursorCurrent();
     };
 
-    GapBuffer.prototype.read = function () {
-        return this.before
-            .concat(this.after.slice(0).reverse())
-            .join('');
-    };
-
     GapBuffer.prototype.insert = function (character) {
         this.before.push(character);
         this.fireListeners('change', this);
@@ -111,6 +109,35 @@ module.exports.GapBuffer = (function GapBufferClosure() {
         index = reverseIndex(this.before, character);
         return index === -1 ? index : index + 1;
     };
+
+    GapBuffer.prototype.load = function (text) {
+        this.after = text.split('').reverse();
+    };
+
+    GapBuffer.prototype.read = function () {
+
+        return this.before
+            .concat(this.after.slice(0).reverse())
+            .join('');
+    };
+
+    GapBuffer.prototype.readAt = function (index) {
+
+        if (index < 0) {
+            return null;
+        }
+
+        if (index < this.before.length) {
+            return this.before[index];
+        }
+
+        if (index >= (this.before.length + this.after.length)) {
+            return null;
+        }
+
+        return this.after[this.after.length - 1 - (index - this.before.length)];
+    };
+
 
     return GapBuffer;
 

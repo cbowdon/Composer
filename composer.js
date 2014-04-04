@@ -1,19 +1,19 @@
 /*jslint node: true */
 'use strict';
 
-var Buffer              = require('./buffer').Buffer,
-    InsertInterpreter   = require('./insert-interpreter').InsertInterpreter;
+var Buffer      = require('./buffer').Buffer,
+    Interpreter = require('./interpreter').Interpreter;
 
 
 module.exports.Composer = (function ComposerClosure() {
 
     function Composer() {
         this.buffer = new Buffer();
-        this.insert = new InsertInterpreter(this.buffer);
+        this.interpreter = new Interpreter(this.buffer);
     }
 
     Composer.prototype.input = function (key) {
-        this.insert.input(key);
+        this.interpreter.input(key);
     };
 
     Composer.prototype.addEventListener = function (name, listener) {

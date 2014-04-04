@@ -25,20 +25,35 @@ module.exports.Visualizer = (function VisualizerClosure() {
 
     function Visualizer(nRows, nCols) {
         this.rows = nRows || 40;
-        this.cols = nCols || 80;
+        this.cols = nCols || 40;
 
         buildTable(this.rows, this.cols);
     }
 
     Visualizer.prototype.redisplay = function (buffer) {
-        var i, j, $cell, bufferText;
+        var i, j, $cell, character;
 
-        bufferText = buffer.read();
+        function setCell(row, col, value) {
+            $cell = $('#r' + row + 'c' + col);
+            $cell.html(value);
+        }
 
         for (i = 0; i < this.rows; i += 1) {
             for (j = 0; j < this.cols; j += 1) {
-                $cell = $('#r' + i + 'c' + j);
-                $cell.html(bufferText[i * this.rows + j]);
+                character = buffer.readAt(i * this.rows + j);
+
+                if (character === '\n' || character === '\r') {
+                    i += 1;
+                    j = 0;
+                } else if (character === '\t') {
+                    setCell(i, j, ' ');
+                    setCell(i, j + 1, ' ');
+                    setCell(i, j + 2, ' ');
+                    setCell(i, j + 3, ' ');
+                    j += 3;
+                } else {
+                    setCell(i, j, character);
+                }
             }
         }
     };
