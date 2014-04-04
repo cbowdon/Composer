@@ -5,8 +5,8 @@ var GapBuffer = require('./gap-buffer').GapBuffer;
 
 module.exports.Buffer = (function BufferClosure() {
 
-    function Buffer() {
-        GapBuffer.call(this);
+    function Buffer(text) {
+        GapBuffer.call(this, text);
     }
 
     Buffer.prototype = GapBuffer.prototype;

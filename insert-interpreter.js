@@ -9,13 +9,22 @@ module.exports.InsertInterpreter = (function InsertInterpreterClosure() {
 
     InsertInterpreter.prototype.input = function (character) {
         if (character.length === 1) {
-            this.buffer.insert(character);
+            return this.buffer.insert(character);
         }
         if (character === '<CR>') {
-          this.buffer.insert('\n');
+            return this.buffer.insert('\n');
         }
         if (character === '<Tab>') {
-          this.insertTab();
+            return this.insertTab();
+        }
+        if (character === '<Backspace>') {
+            return this.buffer.cut();
+        }
+        if (character === '<Left>') {
+            return this.buffer.cursorBack();
+        }
+        if (character === '<Right>') {
+            return this.buffer.cursorForward();
         }
     };
 
@@ -24,6 +33,7 @@ module.exports.InsertInterpreter = (function InsertInterpreterClosure() {
         this.buffer.insert(' ');
         this.buffer.insert(' ');
         this.buffer.insert(' ');
+        return this;
     };
 
     return InsertInterpreter;
