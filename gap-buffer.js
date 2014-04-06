@@ -30,24 +30,33 @@ module.exports.GapBuffer = (function GapBufferClosure() {
 
     Object.defineProperties(GapBuffer.prototype, publisher);
 
+    Object.defineProperty(GapBuffer.prototype, 'length', {
+        get: function () {
+            return this.before.length + this.after.length;
+        }
+    });
+
+    GapBuffer.prototype.cursorPosition = function () {
+        return this.before.length;
+    };
+
     GapBuffer.prototype.cursorCurrent = function () {
         return this.after[this.after.length - 1];
     };
 
     GapBuffer.prototype.cursorForward = function () {
         // moves a char from after to before
-        var movedChar;
-
-        // 'stick' at the end of the buffer
-        if (this.after.length > 1) {
-            movedChar = this.after.pop();
-        }
+        var movedChar = this.after.pop();
 
         if (movedChar) {
             this.before.push(movedChar);
         }
 
-        return this.cursorCurrent();
+        if (this.after.length === 0) {
+            return { done: true };
+        }
+
+        return { done: false, value: this.cursorCurrent() };
     };
 
     GapBuffer.prototype.cursorBack = function () {
@@ -57,7 +66,12 @@ module.exports.GapBuffer = (function GapBufferClosure() {
             this.after.push(movedChar);
         }
 
-        return this.cursorCurrent();
+        if (this.before.length === 0) {
+            return { done: true };
+        }
+
+
+        return { done: false, value: this.cursorCurrent() };
     };
 
     GapBuffer.prototype.cursorPeek = function () {

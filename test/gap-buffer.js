@@ -47,22 +47,54 @@ exports.tests = [
         var gapBuffer = new GapBuffer('Hello');
 
         assert.strictEqual(gapBuffer.cursorCurrent(), 'H', 0);
-        assert.strictEqual(gapBuffer.cursorBack(), 'H', 1);
-        assert.strictEqual(gapBuffer.cursorForward(), 'e', 2);
-        assert.strictEqual(gapBuffer.cursorForward(), 'l', 3);
-        assert.strictEqual(gapBuffer.cursorBack(), 'e', 4);
-        assert.strictEqual(gapBuffer.cursorForward(), 'l', 5);
-        assert.strictEqual(gapBuffer.cursorForward(), 'l', 6);
-        assert.strictEqual(gapBuffer.cursorForward(), 'o', 7);
-        assert.strictEqual(gapBuffer.cursorForward(), 'o', 8);
-        assert.strictEqual(gapBuffer.cursorBack(), 'l', 9);
+        assert.deepEqual(gapBuffer.cursorBack(), { done: true }, 1);
+        assert.strictEqual(gapBuffer.cursorForward().value, 'e', 2);
+        assert.strictEqual(gapBuffer.cursorForward().value, 'l', 3);
+        assert.strictEqual(gapBuffer.cursorBack().value, 'e', 4);
+        assert.strictEqual(gapBuffer.cursorForward().value, 'l', 5);
+        assert.strictEqual(gapBuffer.cursorForward().value, 'l', 6);
+        assert.strictEqual(gapBuffer.cursorForward().value, 'o', 7);
+        assert.deepEqual(gapBuffer.cursorForward(), { done: true }, 8);
+        assert.strictEqual(gapBuffer.cursorBack().value, 'o', 9);
+    },
+
+    function GapBuffer_cursorPosition() {
+        var gapBuffer = new GapBuffer('Hello');
+
+        assert.strictEqual(gapBuffer.cursorPosition(), 0);
+
+        gapBuffer.cursorForward();
+        assert.strictEqual(gapBuffer.cursorPosition(), 1);
+        gapBuffer.cursorForward();
+        assert.strictEqual(gapBuffer.cursorPosition(), 2);
+
+        gapBuffer.cursorForward();
+        gapBuffer.cursorForward();
+        gapBuffer.cursorForward();
+        assert.strictEqual(gapBuffer.cursorPosition(), 5);
+
+        gapBuffer.cursorForward();
+        assert.strictEqual(gapBuffer.cursorPosition(), 5);
+
+        gapBuffer.cursorBack();
+        assert.strictEqual(gapBuffer.cursorPosition(), 4);
+        gapBuffer.cursorBack();
+        assert.strictEqual(gapBuffer.cursorPosition(), 3);
+
+        gapBuffer.cursorBack();
+        gapBuffer.cursorBack();
+        gapBuffer.cursorBack();
+        assert.strictEqual(gapBuffer.cursorPosition(), 0);
+
+        gapBuffer.cursorBack();
+        assert.strictEqual(gapBuffer.cursorPosition(), 0);
     },
 
     function GapBuffer_cursorPeek() {
         var gapBuffer = new GapBuffer('Hello');
 
         assert.strictEqual(gapBuffer.cursorCurrent(), 'H', 0);
-        assert.strictEqual(gapBuffer.cursorForward(), 'e', 1);
+        assert.strictEqual(gapBuffer.cursorForward().value, 'e', 1);
         assert.strictEqual(gapBuffer.cursorPeek(), 'l', 2);
     },
 
@@ -160,6 +192,16 @@ exports.tests = [
         for (index = 0; index < text.length; index += 1) {
             assert.strictEqual(gapBuffer.readAt(index), text[index], "at end: " + index);
         }
+    },
+
+    function GapBuffer_length() {
+        var gapBuffer = new GapBuffer();
+
+        gapBuffer.load('Hello');
+        assert.strictEqual(gapBuffer.length, 5);
+
+        gapBuffer.load('Hello, world');
+        assert.strictEqual(gapBuffer.length, 12);
     },
 
 ];

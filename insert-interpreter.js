@@ -17,7 +17,11 @@ module.exports.InsertInterpreter = (function InsertInterpreterClosure() {
         if (character === '<Tab>') {
             return this.insertTab();
         }
+        if (character === '<Del>') {
+            return this.buffer.cut();
+        }
         if (character === '<Backspace>') {
+            this.buffer.cursorBack();
             return this.buffer.cut();
         }
         if (character === '<Left>') {

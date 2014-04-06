@@ -36,13 +36,13 @@ module.exports.Visualizer = (function VisualizerClosure() {
         this.table = buildTable(this.rows, this.cols);
     }
 
+    Visualizer.prototype.setCharAt = function (row, col, value) {
+        var $cell = this.table[row][col];
+        $cell.html(value);
+    };
+
     Visualizer.prototype.redisplay = function (buffer) {
         var i, j, $cell, character, that = this;
-
-        function setCell(row, col, value) {
-            $cell = that.table[row][col];
-            $cell.html(value);
-        }
 
         for (i = 0; i < this.rows; i += 1) {
             for (j = 0; j < this.cols; j += 1) {
@@ -52,13 +52,13 @@ module.exports.Visualizer = (function VisualizerClosure() {
                     i += 1;
                     j = 0;
                 } else if (character === '\t') {
-                    setCell(i, j, ' ');
-                    setCell(i, j + 1, ' ');
-                    setCell(i, j + 2, ' ');
-                    setCell(i, j + 3, ' ');
+                    this.setCharAt(i, j, ' ');
+                    this.setCharAt(i, j + 1, ' ');
+                    this.setCharAt(i, j + 2, ' ');
+                    this.setCharAt(i, j + 3, ' ');
                     j += 3;
                 } else {
-                    setCell(i, j, character);
+                    this.setCharAt(i, j, character);
                 }
             }
         }
