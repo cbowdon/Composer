@@ -6,6 +6,7 @@ var testSuites = [
     require('./buffer-router'),
     require('./normal-functions'),
     require('./publisher'),
+    require('./frame'),
 ];
 
 testSuites.forEach(function (suite) {

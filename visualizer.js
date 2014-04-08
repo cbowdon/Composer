@@ -36,30 +36,16 @@ module.exports.Visualizer = (function VisualizerClosure() {
         this.table = buildTable(this.rows, this.cols);
     }
 
-    Visualizer.prototype.setCharAt = function (row, col, value) {
-        var $cell = this.table[row][col];
-        $cell.html(value);
-    };
-
     Visualizer.prototype.redisplay = function (buffer) {
-        var i, j, $cell, character, that = this;
+        var i, j, $cell, character, frame;
+
+        frame = new Frame(buffer, rows, cols, 0);
 
         for (i = 0; i < this.rows; i += 1) {
             for (j = 0; j < this.cols; j += 1) {
-                character = buffer.readAt(i * this.rows + j);
-
-                if (character === '\n' || character === '\r') {
-                    i += 1;
-                    j = 0;
-                } else if (character === '\t') {
-                    this.setCharAt(i, j, ' ');
-                    this.setCharAt(i, j + 1, ' ');
-                    this.setCharAt(i, j + 2, ' ');
-                    this.setCharAt(i, j + 3, ' ');
-                    j += 3;
-                } else {
-                    this.setCharAt(i, j, character);
-                }
+                character = frame.next();
+                $cell = this.table[row][col];
+                $cell.html(value);
             }
         }
     };
