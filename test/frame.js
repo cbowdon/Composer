@@ -3,70 +3,63 @@
 
 var assert  = require('assert'),
     Buffer  = require('../buffer').Buffer,
-    Frame   = require('../frame').Frame;
+    Framer   = require('../frame').Framer;
 
 exports.tests = [
-    function Frame_next() {
+    function Framer_next() {
         var buffer  = new Buffer('Hello, world'),
-            frame   = new Frame(1, 4).frame(buffer, 1);
+            frame   = new Framer(1, 4).frame(buffer, 1);
 
-        assert.strictEqual(frame.next().value, 'e');
-        assert.strictEqual(frame.next().value, 'l');
-        assert.strictEqual(frame.next().value, 'l');
-        assert.strictEqual(frame.next().value, 'o');
-        assert.ok(frame.next().done);
-
+        assert.deepEqual(frame.next(), { value: 'e', done: false });
+        assert.deepEqual(frame.next(), { value: 'l', done: false });
+        assert.deepEqual(frame.next(), { value: 'l', done: false });
+        assert.deepEqual(frame.next(), { value: 'o', done: false });
+        assert.deepEqual(frame.next(), { done: true });
     },
 
-    function Frame_tab() {
-        var text    = '\tThis should be indented.',
+    function Framer_tab() {
+        var text    = '\tIndent!',
             buffer  = new Buffer(text),
-            frame   = new Frame(2, 40).frame(buffer),
-            index = 0;
+            frame   = new Framer(2, 40).frame(buffer);
 
-        while (index < 4) {
-            assert.strictEqual(frame.next().value, ' ', index + ' - tabs');
-            index += 1;
-        }
-
-        while (index < text.length + 3) {
-            assert.strictEqual(frame.next().value, text[index - 3], index + ' - chars');
-            index += 1;
-        }
-
-        while (index < 80) {
-            assert.ok(frame.next().done, index);
-            index += 1;
-        }
+        assert.deepEqual(frame.next(), { value: ' ', done: false });
+        assert.deepEqual(frame.next(), { value: ' ', done: false });
+        assert.deepEqual(frame.next(), { value: ' ', done: false });
+        assert.deepEqual(frame.next(), { value: ' ', done: false });
+        assert.deepEqual(frame.next(), { value: 'I', done: false });
+        assert.deepEqual(frame.next(), { value: 'n', done: false });
+        assert.deepEqual(frame.next(), { value: 'd', done: false });
+        assert.deepEqual(frame.next(), { value: 'e', done: false });
+        assert.deepEqual(frame.next(), { value: 'n', done: false });
+        assert.deepEqual(frame.next(), { value: 't', done: false });
+        assert.deepEqual(frame.next(), { value: '!', done: false });
+        assert.deepEqual(frame.next(), { done: true });
     },
 
-    function Frame_newLine() {
-        var text    = 'This should split onto \nmultiple lines.',
+    function Framer_newLine() {
+        var text    = 'Split \nthis.',
             buffer  = new Buffer(text),
-            frame   = new Frame(2, 40).frame(buffer),
-            index = 0,
-            newLineIndex;
+            frame   = new Framer(2, 10).frame(buffer);
 
-        while (text[index] !== '\n') {
-            assert.strictEqual(frame.next().value, text[index], index + ' line 1 text');
-            index += 1;
-        }
-
-        newLineIndex = index;
-
-        while (index < 40) {
-            assert.strictEqual(frame.next().value, ' ', index + ' - line 1 spaces');
-            index += 1;
-        }
-
-        while (index < 40 + text.length - newLineIndex) {
-            assert.strictEqual(frame.next().value, text[index - newLineIndex], index + ' - line 2 text');
-            index += 1;
-        }
-
-        while (index < 80) {
-            assert.ok(frame.next().done, index);
-            index += 1;
-        }
+        assert.deepEqual(frame.next(), { value: 'S', done: false });
+        assert.deepEqual(frame.next(), { value: 'p', done: false });
+        assert.deepEqual(frame.next(), { value: 'l', done: false });
+        assert.deepEqual(frame.next(), { value: 'i', done: false });
+        assert.deepEqual(frame.next(), { value: 't', done: false });
+        assert.deepEqual(frame.next(), { value: ' ', done: false });
+        assert.deepEqual(frame.next(), { value: undefined, done: false });
+        assert.deepEqual(frame.next(), { value: undefined, done: false });
+        assert.deepEqual(frame.next(), { value: undefined, done: false });
+        assert.deepEqual(frame.next(), { value: undefined, done: false });
+        assert.deepEqual(frame.next(), { value: 't', done: false });
+        assert.deepEqual(frame.next(), { value: 'h', done: false });
+        assert.deepEqual(frame.next(), { value: 'i', done: false });
+        assert.deepEqual(frame.next(), { value: 's', done: false });
+        assert.deepEqual(frame.next(), { value: '.', done: false });
+        assert.deepEqual(frame.next(), { done: true });
+        assert.deepEqual(frame.next(), { done: true });
+        assert.deepEqual(frame.next(), { done: true });
+        assert.deepEqual(frame.next(), { done: true });
+        assert.deepEqual(frame.next(), { done: true });
     }
 ];

@@ -1,7 +1,8 @@
 /*jslint node: true */
 'use strict';
 
-var $ = require('jquery');
+var $       = require('jquery'),
+    Framer  = require('./frame').Framer;
 
 module.exports.Visualizer = (function VisualizerClosure() {
 
@@ -34,18 +35,22 @@ module.exports.Visualizer = (function VisualizerClosure() {
         this.rows = nRows || 40;
         this.cols = nCols || 40;
         this.table = buildTable(this.rows, this.cols);
+        this.framer = new Framer(nRows, nCols, 4);
     }
 
     Visualizer.prototype.redisplay = function (buffer) {
-        var i, j, $cell, character, frame;
+        var row, col, $cell, frame, result;
 
-        frame = new Frame(buffer, rows, cols, 0);
+        frame = this.framer.frame(buffer);
 
-        for (i = 0; i < this.rows; i += 1) {
-            for (j = 0; j < this.cols; j += 1) {
-                character = frame.next();
+        for (row = 0; row < this.rows; row += 1) {
+            for (col = 0; col < this.cols; col += 1) {
+                result = frame.next();
+                if (result.done) {
+                    break;
+                }
                 $cell = this.table[row][col];
-                $cell.html(value);
+                $cell.html(result.value || ' ');
             }
         }
     };

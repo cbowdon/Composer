@@ -12,9 +12,7 @@ module.exports.KeyHandler = (function KeyHandlerClosure() {
             character;
 
         if (code === 0) {
-            return key === 'Enter' ?
-                '<CR>' :
-                '<' + key + '>';
+            return key === 'Enter' ?  '<CR>' : '<' + key + '>';
         }
 
         character = String.fromCharCode(code);

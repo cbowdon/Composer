@@ -2,11 +2,11 @@
 'use strict';
 
 var testSuites = [
+    require('./publisher'),
+    require('./frame'),
     require('./gap-buffer'),
     require('./buffer-router'),
     require('./normal-functions'),
-    require('./publisher'),
-    require('./frame'),
 ];
 
 testSuites.forEach(function (suite) {

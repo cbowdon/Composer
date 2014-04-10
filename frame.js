@@ -1,19 +1,60 @@
 /*jslint node: true */
 'use strict';
 
-module.exports.Frame = (function FrameClosure() {
 
-    function Frame(rows, cols, tabStop) {
+module.exports.BufferStack = (function BufferStackClosure() {
+
+    function BufferStack(buffer, offset) {
+        this.buffer   = buffer;
+        this.preStack = [];
+        this.index    = offset || 0;
+    }
+
+    Object.defineProperty(BufferStack.prototype, 'empty', {
+        get: function () {
+            return this.index > (this.preStack.length + this.buffer.length - 1);
+        }
+    });
+
+
+    BufferStack.prototype.push = function (item, count) {
+        var max = count || 1, i;
+        for (i = 0; i < max; i += 1) {
+            this.preStack.push(item);
+        }
+    };
+
+    BufferStack.prototype.pop = function () {
+        var result;
+        if (this.preStack.length > 0) {
+            return this.preStack.pop();
+        }
+
+        result = this.buffer.readAt(this.index);
+        this.index += 1;
+        return result;
+    };
+
+    BufferStack.prototype.next = function () {
+        return { done: this.empty, value: this.pop() };
+    };
+
+    return BufferStack;
+}());
+
+module.exports.Framer = (function FramerClosure() {
+    var BufferStack = module.exports.BufferStack;
+
+    function Framer(rows, cols, tabStop) {
         this.rows     = rows || 10;
         this.cols     = cols || 40;
         this.tabStop  = tabStop || 4;
     }
 
-    Frame.prototype.frame = function (buffer, offset) {
-        var index       = offset || 0,
-            blanks      = 0,
-            rowIndex    = 0,
+    Framer.prototype.frame = function (buffer, offset) {
+        var rowIndex    = 0,
             colIndex    = 0,
+            stack       = new BufferStack(buffer, offset),
             that        = this;
 
         return {
@@ -25,36 +66,26 @@ module.exports.Frame = (function FrameClosure() {
                     rowIndex += 1;
                 }
 
+                colIndex += 1;
+
                 if (rowIndex >= that.rows) {
                     return { done: true };
                 }
 
-                colIndex += 1;
-
-                if (blanks > 0) {
-                    blanks -= 1;
-                    return { done: false, value: ' ' };
-                }
-
-                if (index > buffer.length) {
+                if (stack.empty) {
                     return { done: true };
                 }
 
-                character = buffer.readAt(index);
-                index += 1;
-
-                if (!character) {
-                    return { done: true };
-                }
+                character = stack.pop();
 
                 if (character === '\t') {
-                    blanks = that.tabStop - 1;
+                    stack.push(' ', that.tabStop - 1);
                     return { done: false, value: ' ' };
                 }
 
                 if (character === '\n') {
-                    blanks = that.cols - colIndex;
-                    return { done: false, value: ' ' };
+                    stack.push(undefined, that.cols - colIndex);
+                    return { done: false, value: undefined };
                 }
 
                 return { done: false, value: character };
@@ -62,5 +93,5 @@ module.exports.Frame = (function FrameClosure() {
         };
     };
 
-    return Frame;
+    return Framer;
 }());

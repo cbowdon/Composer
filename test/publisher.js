@@ -12,7 +12,6 @@ exports.tests = [
             return 'weasel';
         });
 
-        console.log(pub.listeners);
         assert.ok(pub.listeners.hasOwnProperty('pop'));
         assert.strictEqual(pub.listeners.pop.length, 1);
     },
