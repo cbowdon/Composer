@@ -2,6 +2,10 @@ body {
   font-family: Courier;
 }
 
+canvas {
+  border: 1px solid black;
+}
+
 .line {
   height: 12px;
   border: 1px solid black;
@@ -10,3 +14,4 @@ body {
 .col {
   width: 6px;
 }
+

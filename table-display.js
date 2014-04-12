@@ -34,8 +34,8 @@ module.exports.TableDisplay = (function TableDisplayClosure() {
     function TableDisplay(nRows, nCols) {
         this.rows = nRows || 40;
         this.cols = nCols || 40;
-        this.table = buildTable(this.rows, this.cols);
         this.framer = new Framer(nRows, nCols, 4);
+        this.table = buildTable(this.rows, this.cols);
     }
 
     TableDisplay.prototype.redisplay = function (buffer) {

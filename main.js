@@ -2,12 +2,12 @@
 'use strict';
 
 var KeyHandler  = require('./key-handler').KeyHandler,
-    TableDisplay  = require('./table-display').TableDisplay,
+    CanvasDisplay  = require('./canvas-display').CanvasDisplay,
     Composer    = require('./composer').Composer;
 
 (function Main() {
     var keyHandler  = new KeyHandler(document),
-        visplay  = new TableDisplay(100, 80),
+        display     = new CanvasDisplay(100, 80),
         composer    = new Composer();
 
     // subscribe composer to key presses
@@ -17,7 +17,7 @@ var KeyHandler  = require('./key-handler').KeyHandler,
 
     // subscribe visplay to buffer changes
     composer.addEventListener('change', function (bufferEvent) {
-        visplay.redisplay(bufferEvent);
+        display.redisplay(bufferEvent);
     });
 
 }());
