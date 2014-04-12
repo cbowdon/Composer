@@ -4,7 +4,7 @@
 var $       = require('jquery'),
     Framer  = require('./frame').Framer;
 
-module.exports.Visualizer = (function VisualizerClosure() {
+module.exports.TableDisplay = (function TableDisplayClosure() {
 
     function buildTable(rows, cols) {
         var i, j, $row, $cell, $tbody, table;
@@ -31,14 +31,14 @@ module.exports.Visualizer = (function VisualizerClosure() {
         return table;
     }
 
-    function Visualizer(nRows, nCols) {
+    function TableDisplay(nRows, nCols) {
         this.rows = nRows || 40;
         this.cols = nCols || 40;
         this.table = buildTable(this.rows, this.cols);
         this.framer = new Framer(nRows, nCols, 4);
     }
 
-    Visualizer.prototype.redisplay = function (buffer) {
+    TableDisplay.prototype.redisplay = function (buffer) {
         var row, col, $cell, frame, result;
 
         frame = this.framer.frame(buffer);
@@ -46,14 +46,14 @@ module.exports.Visualizer = (function VisualizerClosure() {
         for (row = 0; row < this.rows; row += 1) {
             for (col = 0; col < this.cols; col += 1) {
                 result = frame.next();
-                if (result.done) {
-                    break;
-                }
                 $cell = this.table[row][col];
+                if (result.done) {
+                    $cell.html(' ');
+                }
                 $cell.html(result.value || ' ');
             }
         }
     };
 
-    return Visualizer;
+    return TableDisplay;
 }());
