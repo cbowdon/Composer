@@ -118,8 +118,16 @@ exports.tests = [
         assert.strictEqual(gapBuffer.cursorEnd(), 'o');
     },
 
+    function GapBuffer_cursorUp() {
+        assert.fail("not yet implemented.");
+    },
+
+    function GapBuffer_cursorDown() {
+        assert.fail("not yet implemented.");
+    },
+
     function GapBuffer_findForward() {
-        var gapBuffer = new GapBuffer('Hello');
+        var gapBuffer = new GapBuffer('Hello, \nworld');
 
         gapBuffer.cursorForward();
 
@@ -127,6 +135,8 @@ exports.tests = [
         assert.strictEqual(gapBuffer.findForward('e'), 0, "e");
         assert.strictEqual(gapBuffer.findForward('l'), 1, "l");
         assert.strictEqual(gapBuffer.findForward('o'), 3, "o");
+
+        assert.strictEqual(gapBuffer.findForward('\n', 2), 5, "\\n");
     },
 
     function GapBuffer_findBack() {

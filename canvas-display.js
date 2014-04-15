@@ -7,7 +7,7 @@ var $       = require('jquery'),
 
 module.exports.CanvasDisplay = (function CanvasDisplayClosure() {
 
-    function buildCanvas(it, rows, cols, cellSize) {
+    function buildContext(it, rows, cols, cellSize) {
 
         $('document').ready(function () {
             var $canvas = $('<canvas>HTML5 Canvas not supported by your browser!</canvas>')
@@ -27,7 +27,7 @@ module.exports.CanvasDisplay = (function CanvasDisplayClosure() {
         this.cols = nCols || 40;
         this.framer = new Framer(nRows, nCols, 4);
         this.cellSize = 12;
-        buildCanvas(this, nRows, nCols, this.cellSize);
+        buildContext(this, nRows, nCols, this.cellSize);
     }
 
     CanvasDisplay.prototype.redisplay = function (buffer) {

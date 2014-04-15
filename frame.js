@@ -58,21 +58,24 @@ module.exports.Framer = (function FramerClosure() {
             that        = this;
 
         return {
+
             next: function () {
-                var character;
+                var character, distToNewLine;
 
                 if (colIndex >= that.cols) {
+                    distToNewLine = buffer.findForward('\n', colIndex * rowIndex);
+                    while (distToNewLine > 0) {
+                        // no wrap - discard
+                        stack.pop();
+                        distToNewLine -= 1;
+                    }
                     colIndex = 0;
                     rowIndex += 1;
                 }
 
                 colIndex += 1;
 
-                if (rowIndex >= that.rows) {
-                    return { done: true };
-                }
-
-                if (stack.empty) {
+                if (rowIndex >= that.rows || stack.empty) {
                     return { done: true };
                 }
 

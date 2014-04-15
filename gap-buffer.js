@@ -70,7 +70,6 @@ module.exports.GapBuffer = (function GapBufferClosure() {
             return { done: true };
         }
 
-
         return { done: false, value: this.cursorCurrent() };
     };
 
@@ -90,6 +89,14 @@ module.exports.GapBuffer = (function GapBufferClosure() {
             this.cursorForward();
         }
         return this.cursorCurrent();
+    };
+
+    GapBuffer.prototype.cursorUp = function () {
+
+    };
+
+    GapBuffer.prototype.cursorDown = function () {
+
     };
 
     GapBuffer.prototype.insert = function (character) {
