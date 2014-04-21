@@ -131,18 +131,37 @@ module.exports.GapBuffer = (function GapBufferClosure() {
         return index === -1 ? index : index + 1;
     };
 
+    GapBuffer.prototype.indexOf = function (character, fromIndex) {
+        var offset = fromIndex || 0,
+            reverseOffset,
+            i;
+
+        if (offset < this.before.length) {
+            return this.before.indexOf(character, offset);
+        }
+
+        reverseOffset = this.after.length - (offset - this.before.length);
+        for (i = reverseOffset; i > 0; i -= 1) {
+            if (this.after[i] === character) {
+                return this.before.length + (reverseOffset - i);
+            }
+        }
+
+        return -1;
+    };
+
     GapBuffer.prototype.load = function (text) {
         this.after = text.split('').reverse();
     };
 
-    GapBuffer.prototype.read = function () {
+    GapBuffer.prototype.toString = function () {
 
         return this.before
             .concat(this.after.slice(0).reverse())
             .join('');
     };
 
-    GapBuffer.prototype.readAt = function (index) {
+    GapBuffer.prototype.charAt = function (index) {
 
         if (index < 0) {
             return null;

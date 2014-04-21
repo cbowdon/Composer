@@ -80,6 +80,6 @@ exports.tests = [
 
         assert.deepEqual(dtl, ['H', 'e']);
 
-        assert.strictEqual(buffer.read(), "llo");
+        assert.strictEqual(buffer.toString(), "llo");
     },
 ];

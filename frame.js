@@ -30,7 +30,7 @@ module.exports.BufferStack = (function BufferStackClosure() {
             return this.preStack.pop();
         }
 
-        result = this.buffer.readAt(this.index);
+        result = this.buffer.charAt(this.index);
         this.index += 1;
         return result;
     };
@@ -63,7 +63,7 @@ module.exports.Framer = (function FramerClosure() {
                 var character, distToNewLine;
 
                 if (colIndex >= that.cols) {
-                    distToNewLine = buffer.findForward('\n', colIndex * rowIndex);
+                    distToNewLine = buffer.indexOf('\n', colIndex * rowIndex);
                     while (distToNewLine > 0) {
                         // no wrap - discard
                         stack.pop();
