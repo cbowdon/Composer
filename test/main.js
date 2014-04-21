@@ -9,6 +9,7 @@ testSuites = [
     require('./publisher'),
     require('./frame'),
     require('./gap-buffer'),
+    require('./buffer'),
     require('./buffer-router'),
     require('./normal-functions'),
 ];
