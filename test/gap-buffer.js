@@ -31,7 +31,7 @@ exports.tests = [
         assert.strictEqual(gapBuffer.toString(), 'Hullo, world');
     },
 
-    function GapBuffer_delete() {
+    function GapBuffer_cut() {
         var gapBuffer = new GapBuffer('Hello, world');
 
         gapBuffer.cursorForward();
@@ -140,16 +140,34 @@ exports.tests = [
         var gapBuffer = new GapBuffer('Hello, \nworld');
 
         assert.strictEqual(gapBuffer.indexOf('\n'), 7, "\\n");
-        assert.strictEqual(gapBuffer.indexOf('w', 1), 7, "w, 1");
+        assert.strictEqual(gapBuffer.indexOf('w'), 8, "w");
+        assert.strictEqual(gapBuffer.indexOf('w', 1), 8, "w, 1");
 
         gapBuffer.cursorForward();
         gapBuffer.cursorForward();
         gapBuffer.cursorForward();
 
-        assert.strictEqual(gapBuffer.indexOf('w', 1), 7, "w, 1 (cursor+3)");
+        assert.strictEqual(gapBuffer.indexOf('w', 1), 8, "w, 1 (cursor+3)");
         assert.strictEqual(gapBuffer.indexOf('e', 6), -1, "e, 6 (cursor+3)");
         assert.strictEqual(gapBuffer.indexOf('f'), -1, "f (cursor+3)");
-        assert.strictEqual(gapBuffer.indexOf('e', 1), 0, "e (cursor+3)");
+        assert.strictEqual(gapBuffer.indexOf('e', 1), 1, "e (cursor+3)");
+    },
+
+    function GapBuffer_lastIndexOf() {
+        var gapBuffer = new GapBuffer('Hello, \nworld!');
+
+        assert.strictEqual(gapBuffer.lastIndexOf('o'), 9);
+        assert.strictEqual(gapBuffer.lastIndexOf('o', 7), 4);
+        assert.strictEqual(gapBuffer.lastIndexOf('x'), -1);
+        assert.strictEqual(gapBuffer.lastIndexOf('x', 3), -1);
+
+        gapBuffer.cursorForward();
+        gapBuffer.cursorForward();
+        gapBuffer.cursorForward();
+
+        assert.strictEqual(gapBuffer.lastIndexOf('l'), 11);
+        assert.strictEqual(gapBuffer.lastIndexOf('l', 3), 3);
+        assert.strictEqual(gapBuffer.lastIndexOf('l', 2), 2);
     },
 
     function GapBuffer_findBack() {

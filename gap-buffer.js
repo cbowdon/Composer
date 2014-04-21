@@ -40,10 +40,6 @@ module.exports.GapBuffer = (function GapBufferClosure() {
         return this.before.length;
     };
 
-    GapBuffer.prototype.cursorCurrent = function () {
-        return this.after[this.after.length - 1];
-    };
-
     GapBuffer.prototype.cursorForward = function () {
         // moves a char from after to before
         var movedChar = this.after.pop();
@@ -73,32 +69,6 @@ module.exports.GapBuffer = (function GapBufferClosure() {
         return { done: false, value: this.cursorCurrent() };
     };
 
-    GapBuffer.prototype.cursorPeek = function () {
-        return this.after[this.after.length - 2];
-    };
-
-    GapBuffer.prototype.cursorStart = function () {
-        while (this.before.length > 0) {
-            this.cursorBack();
-        }
-        return this.cursorCurrent();
-    };
-
-    GapBuffer.prototype.cursorEnd = function () {
-        while (this.after.length > 1) {
-            this.cursorForward();
-        }
-        return this.cursorCurrent();
-    };
-
-    GapBuffer.prototype.cursorUp = function () {
-
-    };
-
-    GapBuffer.prototype.cursorDown = function () {
-
-    };
-
     GapBuffer.prototype.insert = function (character) {
         this.before.push(character);
         this.fireListeners('change', this);
@@ -118,32 +88,26 @@ module.exports.GapBuffer = (function GapBufferClosure() {
         return result;
     };
 
-    GapBuffer.prototype.findForward = function (character) {
-        return reverseIndex(this.after, character);
-    };
-
-    GapBuffer.prototype.findBack = function (character) {
-        var index;
-        if (this.cursorCurrent() === character) {
-            return 0;
-        }
-        index = reverseIndex(this.before, character);
-        return index === -1 ? index : index + 1;
-    };
-
     GapBuffer.prototype.indexOf = function (character, fromIndex) {
         var offset = fromIndex || 0,
-            reverseOffset,
             i;
 
-        if (offset < this.before.length) {
-            return this.before.indexOf(character, offset);
+        for (i = offset; i < this.length; i += 1) {
+            if (this.charAt(i) === character) {
+                return i;
+            }
         }
 
-        reverseOffset = this.after.length - (offset - this.before.length);
-        for (i = reverseOffset; i > 0; i -= 1) {
-            if (this.after[i] === character) {
-                return this.before.length + (reverseOffset - i);
+        return -1;
+    };
+
+    GapBuffer.prototype.lastIndexOf = function (character, fromIndex) {
+        var offset = fromIndex || this.length - 1,
+            i;
+
+        for (i = offset; i > 0; i -= 1) {
+            if (this.charAt(i) === character) {
+                return i;
             }
         }
 
@@ -178,7 +142,50 @@ module.exports.GapBuffer = (function GapBufferClosure() {
         return this.after[this.after.length - 1 - (index - this.before.length)];
     };
 
+    GapBuffer.prototype.findForward = function (character) {
+        return reverseIndex(this.after, character);
+    };
 
+    GapBuffer.prototype.findBack = function (character) {
+        var index;
+        if (this.cursorCurrent() === character) {
+            return 0;
+        }
+        index = reverseIndex(this.before, character);
+        return index === -1 ? index : index + 1;
+    };
+
+    GapBuffer.prototype.cursorCurrent = function () {
+        return this.after[this.after.length - 1];
+    };
+
+
+    GapBuffer.prototype.cursorPeek = function () {
+        return this.after[this.after.length - 2];
+    };
+
+    GapBuffer.prototype.cursorStart = function () {
+        while (this.before.length > 0) {
+            this.cursorBack();
+        }
+        return this.cursorCurrent();
+    };
+
+    GapBuffer.prototype.cursorEnd = function () {
+        while (this.after.length > 1) {
+            this.cursorForward();
+        }
+        return this.cursorCurrent();
+    };
+
+
+    GapBuffer.prototype.cursorUp = function () {
+
+    };
+
+    GapBuffer.prototype.cursorDown = function () {
+
+    };
     return GapBuffer;
 
 }());
