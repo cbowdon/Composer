@@ -19,7 +19,6 @@ module.exports.Buffer = (function BufferClosure() {
         GapBuffer.call(this, text);
     }
 
-    Buffer.prototype = GapBuffer.prototype;
     Buffer.prototype.constructor = Buffer;
 
     Buffer.prototype.indexOf = function (character, fromIndex) {
@@ -49,38 +48,39 @@ module.exports.Buffer = (function BufferClosure() {
     };
 
     Buffer.prototype.findForward = function (character) {
-        return reverseIndex(this.after, character);
+        var index = this.indexOf(character, this.cursorPosition());
+
+        return index === -1 ? index : index - this.cursorPosition();
     };
 
     Buffer.prototype.findBack = function (character) {
-        var index;
-        if (this.cursorCurrent() === character) {
-            return 0;
-        }
-        index = reverseIndex(this.before, character);
-        return index === -1 ? index : index + 1;
-    };
+        var index = this.lastIndexOf(character, this.cursorPosition());
 
-    Buffer.prototype.cursorCurrent = function () {
-        return this.after[this.after.length - 1];
+        console.log({ index: index, cursor: this.cursorPosition() });
+        return index === -1 ? index : this.cursorPosition() - index;
     };
-
 
     Buffer.prototype.cursorPeek = function () {
-        return this.after[this.after.length - 2];
+        return this.charAt(this.cursorPosition() + 1);
     };
 
     Buffer.prototype.cursorStart = function () {
-        while (this.before.length > 0) {
-            this.cursorBack();
-        }
+        var result;
+
+        do {
+            result = this.cursorBack();
+        } while (!result.done);
+
         return this.cursorCurrent();
     };
 
     Buffer.prototype.cursorEnd = function () {
-        while (this.after.length > 1) {
-            this.cursorForward();
-        }
+        var result;
+
+        do {
+            result = this.cursorForward();
+        } while (!result.done);
+
         return this.cursorCurrent();
     };
 

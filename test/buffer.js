@@ -31,7 +31,7 @@ exports.tests = [
         buffer.cursorForward();
         buffer.cursorForward();
 
-        assert.strictEqual(buffer.cursorEnd(), 'o');
+        assert.strictEqual(buffer.cursorEnd(), undefined);
     },
 
     function Buffer_cursorUp() {
