@@ -98,6 +98,10 @@ exports.tests = [
         assert.strictEqual(buffer.lastIndexOf('l'), 11);
         assert.strictEqual(buffer.lastIndexOf('l', 3), 3);
         assert.strictEqual(buffer.lastIndexOf('l', 2), 2);
+
+        assert.strictEqual(buffer.lastIndexOf('H'), 0);
+        assert.strictEqual(buffer.lastIndexOf('H', 1), 0);
+        assert.strictEqual(buffer.lastIndexOf('H', 8), 0);
     },
 
 ];

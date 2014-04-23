@@ -38,7 +38,7 @@ module.exports.Buffer = (function BufferClosure() {
         var offset = fromIndex || this.length - 1,
             i;
 
-        for (i = offset; i > 0; i -= 1) {
+        for (i = offset; i >= 0; i -= 1) {
             if (this.charAt(i) === character) {
                 return i;
             }
@@ -56,7 +56,6 @@ module.exports.Buffer = (function BufferClosure() {
     Buffer.prototype.findBack = function (character) {
         var index = this.lastIndexOf(character, this.cursorPosition());
 
-        console.log({ index: index, cursor: this.cursorPosition() });
         return index === -1 ? index : this.cursorPosition() - index;
     };
 
