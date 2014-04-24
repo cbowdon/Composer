@@ -1,7 +1,7 @@
 /*jslint node: true */
 'use strict';
 
-module.exports.InsertInterpreter = (function InsertInterpreterClosure() {
+exports.InsertInterpreter = (function InsertInterpreterClosure() {
 
     function InsertInterpreter(buffer) {
         this.buffer = buffer;

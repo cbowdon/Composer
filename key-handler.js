@@ -4,7 +4,7 @@
 var $           = require('jquery'),
     publisher   = require('./publisher');
 
-module.exports.KeyHandler = (function KeyHandlerClosure() {
+exports.KeyHandler = (function KeyHandlerClosure() {
 
     function convert(keyEvent) {
         var code = keyEvent.charCode,

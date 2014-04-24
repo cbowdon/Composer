@@ -3,7 +3,7 @@
 
 var InsertInterpreter = require('./insert-interpreter').InsertInterpreter;
 
-module.exports.Interpreter = (function InterpreterClosure() {
+exports.Interpreter = (function InterpreterClosure() {
     function Interpreter(buffer) {
         this.buffer = buffer;
         this.insert = new InsertInterpreter(buffer);

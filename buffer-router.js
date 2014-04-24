@@ -3,7 +3,7 @@
 
 var Buffer = require('./buffer').Buffer;
 
-module.exports.BufferRouter = (function BufferRouterClosure() {
+exports.BufferRouter = (function BufferRouterClosure() {
 
     function BufferRouter() {
         this.buffers = [new Buffer()];

@@ -3,7 +3,7 @@
 
 var GapBuffer = require('./gap-buffer').GapBuffer;
 
-module.exports.Buffer = (function BufferClosure() {
+exports.Buffer = (function BufferClosure() {
 
     function reverseIndex(array, value) {
         var i, len = array.length;

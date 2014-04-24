@@ -4,7 +4,7 @@
 var BufferRouter        = require('./buffer-router').BufferRouter,
     InsertInterpreter   = require('./insert-interpreter').InsertInterpreter;
 
-module.exports.ModeRouter = (function ModeRouterClosure() {
+exports.ModeRouter = (function ModeRouterClosure() {
 
     function ModeRouter() {
         this.bufferRouter   = new BufferRouter();

@@ -5,7 +5,7 @@ var Buffer      = require('./buffer').Buffer,
     Interpreter = require('./interpreter').Interpreter;
 
 
-module.exports.Composer = (function ComposerClosure() {
+exports.Composer = (function ComposerClosure() {
 
     function Composer() {
         this.buffer = new Buffer();

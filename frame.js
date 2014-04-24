@@ -2,7 +2,7 @@
 'use strict';
 
 
-module.exports.BufferStack = (function BufferStackClosure() {
+var BufferStack = (function BufferStackClosure() {
 
     function BufferStack(buffer, offset) {
         this.buffer   = buffer;
@@ -42,8 +42,7 @@ module.exports.BufferStack = (function BufferStackClosure() {
     return BufferStack;
 }());
 
-module.exports.Framer = (function FramerClosure() {
-    var BufferStack = module.exports.BufferStack;
+exports.Framer = (function FramerClosure() {
 
     function Framer(rows, cols, tabStop) {
         this.rows     = rows || 10;

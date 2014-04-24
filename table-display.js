@@ -4,7 +4,7 @@
 var $       = require('jquery'),
     Framer  = require('./frame').Framer;
 
-module.exports.TableDisplay = (function TableDisplayClosure() {
+exports.TableDisplay = (function TableDisplayClosure() {
 
     function buildTable(rows, cols) {
         var i, j, $row, $cell, $tbody, table;

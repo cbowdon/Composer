@@ -5,7 +5,7 @@ var $       = require('jquery'),
     Framer  = require('./frame').Framer,
     Buffer  = require('./buffer').Buffer;
 
-module.exports.CanvasDisplay = (function CanvasDisplayClosure() {
+exports.CanvasDisplay = (function CanvasDisplayClosure() {
 
     function buildContext(it, rows, cols, cellSize) {
 

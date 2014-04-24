@@ -1,7 +1,7 @@
 /*jslint node: true */
 'use strict';
 
-module.exports.motions = {
+exports.motions = {
 
     'h': {
         accepts: 'none',
@@ -70,7 +70,7 @@ module.exports.motions = {
     }
 };
 
-module.exports.operators = {
+exports.operators = {
 
     'd': {
         accepts: 'motion',

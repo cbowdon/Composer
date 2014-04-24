@@ -3,7 +3,7 @@
 
 var publisher = require('./publisher');
 
-module.exports.GapBuffer = (function GapBufferClosure() {
+exports.GapBuffer = (function GapBufferClosure() {
 
     function toString(before, after) {
         return before
