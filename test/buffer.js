@@ -14,6 +14,28 @@ exports.tests = [
         assert.strictEqual(buffer.cursorPeek(), 'l', 2);
     },
 
+    function Buffer_cursorTo() {
+        var buffer = new Buffer('Hello');
+
+        assert.strictEqual(buffer.cursorTo(3), 'l');
+        assert.strictEqual(buffer.cursorPosition(), 3);
+
+        assert.strictEqual(buffer.cursorTo(0), 'H');
+        assert.strictEqual(buffer.cursorPosition(), 0);
+
+        assert.strictEqual(buffer.cursorTo(4), 'o');
+        assert.strictEqual(buffer.cursorPosition(), 4);
+
+        assert.strictEqual(buffer.cursorTo(2), 'l');
+        assert.strictEqual(buffer.cursorPosition(), 2);
+
+        assert.strictEqual(buffer.cursorTo(-1), undefined);
+        assert.strictEqual(buffer.cursorPosition(), 2);
+
+        assert.strictEqual(buffer.cursorTo(5), undefined);
+        assert.strictEqual(buffer.cursorPosition(), 2);
+    },
+
     function Buffer_cursorStart() {
         var buffer = new Buffer('Hello');
 

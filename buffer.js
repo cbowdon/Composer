@@ -63,6 +63,19 @@ exports.Buffer = (function BufferClosure() {
         return this.charAt(this.cursorPosition() + 1);
     };
 
+    Buffer.prototype.cursorTo = function (index) {
+        if (index < 0 || index >= this.length) {
+            return undefined;
+        }
+        while (this.cursorPosition() > index) {
+            this.cursorBack();
+        }
+        while (this.cursorPosition() < index) {
+            this.cursorForward();
+        }
+        return this.cursorCurrent();
+    };
+
     Buffer.prototype.cursorStart = function () {
         var result;
 
