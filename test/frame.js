@@ -24,9 +24,11 @@ exports.tests = [
         assert.deepEqual(frame.next(), { value: 'H', done: false });
         assert.deepEqual(frame.next(), { value: 'e', done: false });
         assert.deepEqual(frame.next(), { value: 'l', done: false });
+
         assert.deepEqual(frame.next(), { value: 'w', done: false });
         assert.deepEqual(frame.next(), { value: 'o', done: false });
         assert.deepEqual(frame.next(), { value: 'r', done: false });
+
         assert.deepEqual(frame.next(), { done: true });
     },
 
@@ -64,6 +66,7 @@ exports.tests = [
         assert.deepEqual(frame.next(), { value: undefined, done: false });
         assert.deepEqual(frame.next(), { value: undefined, done: false });
         assert.deepEqual(frame.next(), { value: undefined, done: false });
+
         assert.deepEqual(frame.next(), { value: 't', done: false });
         assert.deepEqual(frame.next(), { value: 'h', done: false });
         assert.deepEqual(frame.next(), { value: 'i', done: false });

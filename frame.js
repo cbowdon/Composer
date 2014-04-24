@@ -59,14 +59,17 @@ exports.Framer = (function FramerClosure() {
         return {
 
             next: function () {
-                var character, distToNewLine;
+                var character,
+                    distToEOL,
+                    index = (rowIndex + 1) * colIndex;
 
                 if (colIndex >= that.cols) {
-                    distToNewLine = buffer.indexOf('\n', colIndex * rowIndex);
-                    while (distToNewLine > 0) {
-                        // no wrap - discard
+                    // plus 1 to include the '\n' itself
+                    distToEOL = buffer.indexOf('\n', index) - index + 1;
+                    while (distToEOL > 0) {
+                        // no wrap - discard these
                         stack.pop();
-                        distToNewLine -= 1;
+                        distToEOL -= 1;
                     }
                     colIndex = 0;
                     rowIndex += 1;
