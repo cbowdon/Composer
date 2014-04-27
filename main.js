@@ -20,4 +20,8 @@ var KeyHandler  = require('./key-handler').KeyHandler,
         display.redisplay(bufferEvent);
     });
 
+    composer.addEventListener('cursor', function (bufferEvent) {
+        display.redisplay(bufferEvent);
+    });
+
 }());

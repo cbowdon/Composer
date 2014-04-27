@@ -48,19 +48,39 @@ exports.CanvasDisplay = (function CanvasDisplayClosure() {
                 x1 = (col + 1) * this.cellSize;
                 y0 = (row + 1) * this.cellSize;
                 y1 = (row + 2) * this.cellSize;
+
+                this.clearCell(x0, y0, x1, y1);
+
                 result = frame.next();
+
+                if (result.cursor) {
+                    this.drawCursor(x0, y0);
+                }
 
                 if (result.done) {
                     break;
                 }
 
-                this.context.clearRect(x0, y0, x1, y1);
                 if (result.value) {
-                    this.context.fillText(result.value || ' ', x0, y0);
+                    this.drawChar(x0, y0, result.value);
                 }
             }
         }
+    };
 
+    CanvasDisplay.prototype.clearCell = function (x0, y0, x1, y1) {
+        this.context.clearRect(x0, y0, x1, y1);
+    };
+
+    CanvasDisplay.prototype.drawChar = function (x0, y0, character) {
+        this.context.font = '12px Courier';
+        this.context.fillStyle = '#000';
+        this.context.fillText(character, x0, y0);
+    };
+
+    CanvasDisplay.prototype.drawCursor = function (x0, y0) {
+        this.context.fillStyle = '#0A0';
+        this.context.fillRect(x0, y0 - this.cellSize, 1, this.cellSize);
     };
 
     return CanvasDisplay;

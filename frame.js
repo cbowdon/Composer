@@ -61,7 +61,8 @@ exports.Framer = (function FramerClosure() {
             next: function () {
                 var character,
                     distToEOL,
-                    index = (rowIndex + 1) * colIndex;
+                    index = (rowIndex + 1) * colIndex,
+                    hasCursor = index === buffer.cursorPosition();
 
                 if (colIndex >= that.cols) {
                     // plus 1 to include the '\n' itself
@@ -78,22 +79,22 @@ exports.Framer = (function FramerClosure() {
                 colIndex += 1;
 
                 if (rowIndex >= that.rows || stack.empty) {
-                    return { done: true };
+                    return { done: true, cursor: hasCursor };
                 }
 
                 character = stack.pop();
 
                 if (character === '\t') {
                     stack.push(' ', that.tabStop - 1);
-                    return { done: false, value: ' ' };
+                    return { done: false, value: ' ', cursor: hasCursor };
                 }
 
                 if (character === '\n') {
                     stack.push(undefined, that.cols - colIndex);
-                    return { done: false, value: undefined };
+                    return { done: false, value: undefined, cursor: false };
                 }
 
-                return { done: false, value: character };
+                return { done: false, value: character, cursor: hasCursor };
             }
         };
     };
