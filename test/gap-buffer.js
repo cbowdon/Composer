@@ -111,8 +111,8 @@ exports.tests = [
             gapBuffer = new GapBuffer(text),
             index;
 
-        assert.strictEqual(gapBuffer.charAt(-1), null, "at start: " + -1);
-        assert.strictEqual(gapBuffer.charAt(text.length), null, "at start: " + text.length);
+        assert.strictEqual(gapBuffer.charAt(-1), undefined, "at start: " + -1);
+        assert.strictEqual(gapBuffer.charAt(text.length), undefined, "at start: " + text.length);
 
         for (index = 0; index < text.length; index += 1) {
             assert.strictEqual(gapBuffer.charAt(index), text[index], "at start: " + index);
@@ -122,8 +122,8 @@ exports.tests = [
         gapBuffer.cursorForward();
         gapBuffer.cursorForward();
 
-        assert.strictEqual(gapBuffer.charAt(-1), null, "moved 3: " + -1);
-        assert.strictEqual(gapBuffer.charAt(text.length), null, "moved 3: " + text.length);
+        assert.strictEqual(gapBuffer.charAt(-1), undefined, "moved 3: " + -1);
+        assert.strictEqual(gapBuffer.charAt(text.length), undefined, "moved 3: " + text.length);
 
         for (index = 0; index < text.length; index += 1) {
             assert.strictEqual(gapBuffer.charAt(index), text[index], "moved 3: " + index);
@@ -133,8 +133,8 @@ exports.tests = [
         gapBuffer.cursorForward();
         gapBuffer.cursorForward();
 
-        assert.strictEqual(gapBuffer.charAt(-1), null, "at end: " + -1);
-        assert.strictEqual(gapBuffer.charAt(text.length), null, "at end: " + text.length);
+        assert.strictEqual(gapBuffer.charAt(-1), undefined, "at end: " + -1);
+        assert.strictEqual(gapBuffer.charAt(text.length), undefined, "at end: " + text.length);
 
         for (index = 0; index < text.length; index += 1) {
             assert.strictEqual(gapBuffer.charAt(index), text[index], "at end: " + index);

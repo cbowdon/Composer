@@ -91,7 +91,7 @@ exports.tests = [
     },
 
     function Framer_cursor() {
-        var text    = 'Some text.',
+        var text    = 'Some \ntext.',
             buffer  = new Buffer(text),
             framer  = new Framer(10, 10);
 
@@ -99,11 +99,13 @@ exports.tests = [
             var frame   = framer.frame(buffer),
                 result  = frame.next(),
                 count   = 0,
-                test;
+                cursorExpected;
 
             while (!result.done) {
-                test = count === index ? result.cursor : !result.cursor;
-                assert.ok(test, msg || { index: index, count: count });
+                cursorExpected = count === index;
+                assert.strictEqual(cursorExpected,
+                        result.cursor,
+                        msg || { index: index, count: count });
                 count += 1;
                 result = frame.next();
             }
@@ -119,6 +121,12 @@ exports.tests = [
         buffer.cursorForward();
         buffer.cursorBack();
         assertCursorAt(3);
+
+        buffer.cursorForward();
+        buffer.cursorForward();
+        buffer.cursorForward();
+        buffer.cursorForward();
+        assertCursorAt(7);
 
         buffer.cursorEnd();
         assertCursorAt(text.length);

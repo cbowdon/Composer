@@ -1,7 +1,6 @@
 /*jslint node: true */
 'use strict';
 
-
 var BufferStack = (function BufferStackClosure() {
 
     function BufferStack(buffer, offset) {
@@ -91,7 +90,7 @@ exports.Framer = (function FramerClosure() {
 
                 if (character === '\n') {
                     stack.push(undefined, that.cols - colIndex);
-                    return { done: false, value: undefined, cursor: false };
+                    return { done: false, value: undefined, cursor: hasCursor };
                 }
 
                 return { done: false, value: character, cursor: hasCursor };

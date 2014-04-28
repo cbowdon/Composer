@@ -8,9 +8,10 @@ var failCount,
 testSuites = [
     require('./publisher'),
     require('./queue'),
-    require('./frame'),
-    require('./gap-buffer'),
+    require('./lib-base'),
     require('./buffer'),
+    require('./gap-buffer'),
+    require('./frame'),
     require('./buffer-router'),
     require('./normal-functions'),
 ];

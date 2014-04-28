@@ -13,7 +13,7 @@ exports.GapBuffer = (function GapBufferClosure() {
 
     function charAt(before, after, index) {
         if (index < 0) {
-            return null;
+            return undefined;
         }
 
         if (index < before.length) {
@@ -21,7 +21,7 @@ exports.GapBuffer = (function GapBufferClosure() {
         }
 
         if (index >= (before.length + after.length)) {
-            return null;
+            return undefined;
         }
 
         return after[after.length - 1 - (index - before.length)];
