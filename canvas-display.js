@@ -2,8 +2,8 @@
 'use strict';
 
 var $       = require('jquery'),
-    Framer  = require('./frame').Framer,
-    Buffer  = require('./buffer').Buffer;
+    Buffer  = require('./buffer').Buffer,
+    lines   = require('./lib-base').lines;
 
 exports.CanvasDisplay = (function CanvasDisplayClosure() {
 
@@ -25,7 +25,6 @@ exports.CanvasDisplay = (function CanvasDisplayClosure() {
     function CanvasDisplay(nRows, nCols) {
         this.rows = nRows || 40;
         this.cols = nCols || 40;
-        this.framer = new Framer(nRows, nCols, 4);
         this.cellSize = 12;
         buildContext(this, nRows, nCols, this.cellSize);
     }
@@ -37,9 +36,11 @@ exports.CanvasDisplay = (function CanvasDisplayClosure() {
             return;
         }
 
-        this.context.clearRect(0, 0, this.rows * this.cellSize, this.cols * this.cellSize);
+        this.context.clearRect(0, 0,
+                this.rows * this.cellSize,
+                this.cols * this.cellSize);
 
-        frame = this.framer.frame(buffer);
+        frame = lines(buffer);
 
         for (row = 0; row < this.rows; row += 1) {
             for (col = 0; col < this.cols; col += 1) {
@@ -51,18 +52,21 @@ exports.CanvasDisplay = (function CanvasDisplayClosure() {
 
                 this.clearCell(x0, y0, x1, y1);
 
-                result = frame.next();
+                if (!frame[row]) {
+                    break;
+                }
+                result = frame[row][col];
+
+                if (!result) {
+                    break;
+                }
 
                 if (result.cursor) {
                     this.drawCursor(x0, y0);
                 }
 
-                if (result.done) {
-                    break;
-                }
-
-                if (result.value) {
-                    this.drawChar(x0, y0, result.value);
+                if (result.character) {
+                    this.drawChar(x0, y0, result.character);
                 }
             }
         }
