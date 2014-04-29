@@ -1,7 +1,8 @@
 /*jslint node: true */
 'use strict';
 
-var publisher = require('./publisher');
+var publisher   = require('./publisher'),
+    repeat      = require('./lib-base').repeat;
 
 exports.GapBuffer = (function GapBufferClosure() {
 
@@ -35,32 +36,36 @@ exports.GapBuffer = (function GapBufferClosure() {
         return before.length;
     }
 
-    function cursorForward(before, after) {
-        var movedChar = after.pop();
+    function cursorForward(before, after, count) {
+        return repeat(count || 1, function () {
+            var movedChar = after.pop();
 
-        if (movedChar) {
-            before.push(movedChar);
-        }
+            if (movedChar) {
+                before.push(movedChar);
+            }
 
-        if (after.length === 0) {
-            return { done: true };
-        }
+            if (after.length === 0) {
+                return { done: true };
+            }
 
-        return { done: false, value: cursorCurrent(before, after) };
+            return { done: false, value: cursorCurrent(before, after) };
+        }).pop();
     }
 
-    function cursorBack(before, after) {
-        var movedChar = before.pop();
+    function cursorBack(before, after, count) {
+        return repeat(count || 1, function () {
+            var movedChar = before.pop();
 
-        if (movedChar) {
-            after.push(movedChar);
-        }
+            if (movedChar) {
+                after.push(movedChar);
+            }
 
-        if (before.length === 0) {
-            return { done: true };
-        }
+            if (before.length === 0) {
+                return { done: true };
+            }
 
-        return { done: false, value: cursorCurrent(before, after) };
+            return { done: false, value: cursorCurrent(before, after) };
+        }).pop();
     }
 
     function cut(before, after) {
@@ -112,14 +117,14 @@ exports.GapBuffer = (function GapBufferClosure() {
             return cursorPosition(before, after);
         };
 
-        this.cursorForward = function () {
-            var result = cursorForward(before, after);
+        this.cursorForward = function (count) {
+            var result = cursorForward(before, after, count);
             this.fireListeners('cursor', this);
             return result;
         };
 
-        this.cursorBack = function () {
-            var result = cursorBack(before, after);
+        this.cursorBack = function (count) {
+            var result = cursorBack(before, after, count);
             this.fireListeners('cursor', this);
             return result;
         };

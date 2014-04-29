@@ -1,6 +1,14 @@
 /*jslint node: true */
 'use strict';
 
+exports.repeat = function (count, func) {
+    var i, result = [];
+    for (i = 0; i < count; i += 1) {
+        result.push(func());
+    }
+    return result;
+};
+
 exports.lines = function (buf) {
     var result  = [[]],
         index   = 0,
@@ -22,4 +30,10 @@ exports.lines = function (buf) {
     }
 
     return result;
+};
+
+exports.cursorBOL = function () {
+};
+
+exports.cursorEOL = function () {
 };

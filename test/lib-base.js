@@ -49,4 +49,12 @@ exports.tests = [
             cursor: true,
         });
     },
+
+    function LibBase_cursorBOL() {
+        assert.fail();
+    },
+
+    function LibBase_cursorEOL() {
+        assert.fail();
+    },
 ];

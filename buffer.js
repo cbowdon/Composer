@@ -97,11 +97,23 @@ exports.Buffer = (function BufferClosure() {
     };
 
     Buffer.prototype.cursorUp = function () {
+        var distToBOL = this.lastIndexOf('\n');
 
+        this.cursorBack(distToBOL);
+
+        while (this.lastIndexOf('\n') > distToBOL) {
+            this.cursorBack();
+        }
     };
 
     Buffer.prototype.cursorDown = function () {
+        var distToBOL = this.indexOf('\n');
 
+        this.cursorForward(distToBOL);
+
+        while (this.indexOf('\n') > distToBOL) {
+            this.cursorForward();
+        }
     };
 
     return Buffer;

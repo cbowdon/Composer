@@ -34,9 +34,7 @@ exports.tests = [
     function GapBuffer_cut() {
         var gapBuffer = new GapBuffer('Hello, world');
 
-        gapBuffer.cursorForward();
-        gapBuffer.cursorForward();
-        gapBuffer.cursorForward();
+        gapBuffer.cursorForward(3);
 
         assert.strictEqual(gapBuffer.cut(), 'l');
         assert.strictEqual(gapBuffer.toString(), 'Helo, world');
@@ -64,12 +62,10 @@ exports.tests = [
 
         gapBuffer.cursorForward();
         assert.strictEqual(gapBuffer.cursorPosition(), 1);
-        gapBuffer.cursorForward();
+        gapBuffer.cursorForward(1);
         assert.strictEqual(gapBuffer.cursorPosition(), 2);
 
-        gapBuffer.cursorForward();
-        gapBuffer.cursorForward();
-        gapBuffer.cursorForward();
+        gapBuffer.cursorForward(3);
         assert.strictEqual(gapBuffer.cursorPosition(), 5);
 
         gapBuffer.cursorForward();
@@ -80,9 +76,7 @@ exports.tests = [
         gapBuffer.cursorBack();
         assert.strictEqual(gapBuffer.cursorPosition(), 3);
 
-        gapBuffer.cursorBack();
-        gapBuffer.cursorBack();
-        gapBuffer.cursorBack();
+        gapBuffer.cursorBack(3);
         assert.strictEqual(gapBuffer.cursorPosition(), 0);
 
         gapBuffer.cursorBack();
