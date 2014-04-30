@@ -35,8 +35,10 @@ exports.Buffer = (function BufferClosure() {
     };
 
     Buffer.prototype.lastIndexOf = function (character, fromIndex) {
-        var offset = fromIndex || this.length - 1,
-            i;
+        var i,
+            offset = fromIndex === 0 ?
+                    fromIndex :
+                    fromIndex || this.length - 1;
 
         for (i = offset; i >= 0; i -= 1) {
             if (this.charAt(i) === character) {
@@ -64,7 +66,7 @@ exports.Buffer = (function BufferClosure() {
     };
 
     Buffer.prototype.cursorTo = function (index) {
-        if (index < 0 || index >= this.length) {
+        if (index < 0 || index > this.length) {
             return undefined;
         }
         while (this.cursorPosition() > index) {
@@ -77,23 +79,17 @@ exports.Buffer = (function BufferClosure() {
     };
 
     Buffer.prototype.cursorStart = function () {
-        var result;
 
-        do {
-            result = this.cursorBack();
-        } while (!result.done);
+        this.cursorTo(0);
 
-        return this.cursorCurrent();
+        return { value: this.cursorCurrent(), done: false };
     };
 
     Buffer.prototype.cursorEnd = function () {
-        var result;
 
-        do {
-            result = this.cursorForward();
-        } while (!result.done);
+        this.cursorTo(this.length);
 
-        return this.cursorCurrent();
+        return { done: true };
     };
 
     Buffer.prototype.cursorUp = function () {

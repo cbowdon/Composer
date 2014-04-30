@@ -51,7 +51,21 @@ exports.tests = [
     },
 
     function LibBase_cursorBOL() {
-        assert.fail();
+        var buffer = new Buffer(text);
+
+        assert.strictEqual(base.cursorBOL(buffer), 'H');
+
+        buffer.cursorForward(3);
+        assert.deepEqual(base.cursorBOL(buffer), { value: 'H', done: false });
+        assert.strictEqual(buffer.cursorPosition(), 0);
+
+        buffer.cursorForward(10);
+        assert.deepEqual(base.cursorBOL(buffer), { value: 'w', done: false });
+        assert.strictEqual(buffer.cursorPosition(), 8);
+
+        buffer.cursorForward(10);
+        assert.deepEqual(base.cursorBOL(buffer), { value: ' ', done: false });
+        assert.strictEqual(buffer.cursorPosition(), 15);
     },
 
     function LibBase_cursorEOL() {

@@ -32,28 +32,27 @@ exports.tests = [
         assert.strictEqual(buffer.cursorTo(-1), undefined);
         assert.strictEqual(buffer.cursorPosition(), 2);
 
-        assert.strictEqual(buffer.cursorTo(5), undefined);
+        assert.strictEqual(buffer.cursorTo(6), undefined);
         assert.strictEqual(buffer.cursorPosition(), 2);
+
+        assert.strictEqual(buffer.cursorTo(5), undefined);
+        assert.strictEqual(buffer.cursorPosition(), 5);
     },
 
     function Buffer_cursorStart() {
         var buffer = new Buffer('Hello');
 
-        buffer.cursorForward();
-        buffer.cursorForward();
-        buffer.cursorForward();
+        buffer.cursorForward(3);
 
-        assert.strictEqual(buffer.cursorStart(), 'H');
+        assert.deepEqual(buffer.cursorStart(), { value: 'H', done: false });
     },
 
     function Buffer_cursorEnd() {
         var buffer = new Buffer('Hello');
 
-        buffer.cursorForward();
-        buffer.cursorForward();
-        buffer.cursorForward();
+        buffer.cursorForward(3);
 
-        assert.strictEqual(buffer.cursorEnd(), undefined);
+        assert.deepEqual(buffer.cursorEnd(), { done: true });
     },
 
     function Buffer_cursorUp() {
@@ -78,9 +77,7 @@ exports.tests = [
     function Buffer_findBack() {
         var buffer = new Buffer('Hello');
 
-        buffer.cursorForward();
-        buffer.cursorForward();
-        buffer.cursorForward();
+        buffer.cursorForward(3);
 
         assert.strictEqual(buffer.findBack('H'), 3, "H");
         assert.strictEqual(buffer.findBack('e'), 2, "e");
@@ -95,9 +92,7 @@ exports.tests = [
         assert.strictEqual(buffer.indexOf('w'), 8, "w");
         assert.strictEqual(buffer.indexOf('w', 1), 8, "w, 1");
 
-        buffer.cursorForward();
-        buffer.cursorForward();
-        buffer.cursorForward();
+        buffer.cursorForward(3);
 
         assert.strictEqual(buffer.indexOf('w', 1), 8, "w, 1 (cursor+3)");
         assert.strictEqual(buffer.indexOf('e', 6), -1, "e, 6 (cursor+3)");
@@ -112,10 +107,9 @@ exports.tests = [
         assert.strictEqual(buffer.lastIndexOf('o', 7), 4);
         assert.strictEqual(buffer.lastIndexOf('x'), -1);
         assert.strictEqual(buffer.lastIndexOf('x', 3), -1);
+        assert.strictEqual(buffer.lastIndexOf('w', 0), -1);
 
-        buffer.cursorForward();
-        buffer.cursorForward();
-        buffer.cursorForward();
+        buffer.cursorForward(3);
 
         assert.strictEqual(buffer.lastIndexOf('l'), 11);
         assert.strictEqual(buffer.lastIndexOf('l', 3), 3);

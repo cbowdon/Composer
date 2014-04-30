@@ -32,8 +32,13 @@ exports.lines = function (buf) {
     return result;
 };
 
-exports.cursorBOL = function () {
+exports.cursorBOL = function (buf) {
+    var distBOL = buf.findBack('\n');
+
+    return distBOL === -1 ?
+            buf.cursorStart() :
+            buf.cursorBack(distBOL);
 };
 
-exports.cursorEOL = function () {
+exports.cursorEOL = function (buf) {
 };
