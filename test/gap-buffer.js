@@ -27,7 +27,7 @@ exports.tests = [
         gapBuffer.cursorForward();
         gapBuffer.update('u');
 
-        assert.strictEqual(gapBuffer.cursorCurrent(), 'u');
+        assert.deepEqual(gapBuffer.cursorCurrent(), { value: 'u', done: false });
         assert.strictEqual(gapBuffer.toString(), 'Hullo, world');
     },
 
@@ -43,7 +43,7 @@ exports.tests = [
     function GapBuffer_cursor() {
         var gapBuffer = new GapBuffer('Hello');
 
-        assert.strictEqual(gapBuffer.cursorCurrent(), 'H', 0);
+        assert.deepEqual(gapBuffer.cursorCurrent(), { value: 'H', done: false }, 0);
         assert.deepEqual(gapBuffer.cursorBack(), { done: true }, 1);
         assert.strictEqual(gapBuffer.cursorForward().value, 'e', 2);
         assert.strictEqual(gapBuffer.cursorForward().value, 'l', 3);

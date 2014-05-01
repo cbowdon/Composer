@@ -82,34 +82,32 @@ exports.Buffer = (function BufferClosure() {
 
         this.cursorTo(0);
 
-        return { value: this.cursorCurrent(), done: false };
+        return this.cursorCurrent();
     };
 
     Buffer.prototype.cursorEnd = function () {
 
         this.cursorTo(this.length);
 
-        return { done: true };
+        return this.cursorCurrent(); //  i.e. { done: true }
     };
 
     Buffer.prototype.cursorUp = function () {
-        var distToBOL = this.lastIndexOf('\n');
+        var position    = this.cursorPosition(),
+            distToBOL   = this.lastIndexOf('\n', position),
+            distToEOL   = this.indexOf('\n', position);
 
         this.cursorBack(distToBOL);
-
-        while (this.lastIndexOf('\n') > distToBOL) {
-            this.cursorBack();
-        }
+        this.cursorBack(distToEOL);
     };
 
     Buffer.prototype.cursorDown = function () {
-        var distToBOL = this.indexOf('\n');
+        var position    = this.cursorPosition(),
+            distToBOL   = this.lastIndexOf('\n', position),
+            distToEOL   = this.indexOf('\n', position);
 
         this.cursorForward(distToBOL);
-
-        while (this.indexOf('\n') > distToBOL) {
-            this.cursorForward();
-        }
+        this.cursorForward(distToEOL);
     };
 
     return Buffer;

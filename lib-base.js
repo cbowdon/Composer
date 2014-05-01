@@ -35,15 +35,25 @@ exports.lines = function (buf) {
 exports.cursorBOL = function (buf) {
     var distBOL = buf.findBack('\n');
 
-    return distBOL === -1 ?
-            buf.cursorStart() :
-            buf.cursorBack(distBOL - 1);
+    switch (distBOL) {
+    case -1:
+        return buf.cursorStart();
+    case 0:
+        return buf.cursorCurrent();
+    default:
+        return buf.cursorBack(distBOL - 1);
+    }
 };
 
 exports.cursorEOL = function (buf) {
     var distEOL = buf.findForward('\n');
 
-    return distEOL === -1 ?
-            buf.cursorEnd() :
-            buf.cursorForward(distEOL);
+    switch (distEOL) {
+    case -1:
+        return buf.cursorEnd();
+    case 0:
+        return buf.cursorCurrent();
+    default:
+        return buf.cursorForward(distEOL);
+    }
 };

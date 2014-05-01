@@ -2,6 +2,7 @@
 'use strict';
 
 exports.InsertInterpreter = (function InsertInterpreterClosure() {
+    var base = require('./lib-base');
 
     function InsertInterpreter(buffer) {
         this.buffer = buffer;
@@ -29,6 +30,18 @@ exports.InsertInterpreter = (function InsertInterpreterClosure() {
         }
         if (character === '<Right>') {
             return this.buffer.cursorForward();
+        }
+        if (character === '<Up>') {
+            return this.buffer.cursorUp();
+        }
+        if (character === '<Down>') {
+            return this.buffer.cursorDown();
+        }
+        if (character === '<C-e>') {
+            return base.cursorEOL(this.buffer);
+        }
+        if (character === '<C-a>') {
+            return base.cursorBOL(this.buffer);
         }
     };
 

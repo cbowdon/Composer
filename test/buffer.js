@@ -9,7 +9,7 @@ exports.tests = [
     function Buffer_cursorPeek() {
         var buffer = new Buffer('Hello');
 
-        assert.strictEqual(buffer.cursorCurrent(), 'H', 0);
+        assert.deepEqual(buffer.cursorCurrent(), { value: 'H', done: false }, 0);
         assert.strictEqual(buffer.cursorForward().value, 'e', 1);
         assert.strictEqual(buffer.cursorPeek(), 'l', 2);
     },
@@ -17,16 +17,16 @@ exports.tests = [
     function Buffer_cursorTo() {
         var buffer = new Buffer('Hello');
 
-        assert.strictEqual(buffer.cursorTo(3), 'l');
+        assert.strictEqual(buffer.cursorTo(3).value, 'l');
         assert.strictEqual(buffer.cursorPosition(), 3);
 
-        assert.strictEqual(buffer.cursorTo(0), 'H');
+        assert.strictEqual(buffer.cursorTo(0).value, 'H');
         assert.strictEqual(buffer.cursorPosition(), 0);
 
-        assert.strictEqual(buffer.cursorTo(4), 'o');
+        assert.strictEqual(buffer.cursorTo(4).value, 'o');
         assert.strictEqual(buffer.cursorPosition(), 4);
 
-        assert.strictEqual(buffer.cursorTo(2), 'l');
+        assert.strictEqual(buffer.cursorTo(2).value, 'l');
         assert.strictEqual(buffer.cursorPosition(), 2);
 
         assert.strictEqual(buffer.cursorTo(-1), undefined);
@@ -35,7 +35,7 @@ exports.tests = [
         assert.strictEqual(buffer.cursorTo(6), undefined);
         assert.strictEqual(buffer.cursorPosition(), 2);
 
-        assert.strictEqual(buffer.cursorTo(5), undefined);
+        assert.deepEqual(buffer.cursorTo(5), { done: true });
         assert.strictEqual(buffer.cursorPosition(), 5);
     },
 

@@ -29,7 +29,10 @@ exports.GapBuffer = (function GapBufferClosure() {
     }
 
     function cursorCurrent(before, after) {
-        return after[after.length - 1];
+        if (after.length === 0) {
+            return { done: true };
+        }
+        return { done: false, value: after[after.length - 1] };
     }
 
     function cursorPosition(before, after) {
@@ -48,7 +51,7 @@ exports.GapBuffer = (function GapBufferClosure() {
                 return { done: true };
             }
 
-            return { done: false, value: cursorCurrent(before, after) };
+            return cursorCurrent(before, after);
         }).pop();
     }
 
@@ -64,7 +67,7 @@ exports.GapBuffer = (function GapBufferClosure() {
                 return { done: true };
             }
 
-            return { done: false, value: cursorCurrent(before, after) };
+            return cursorCurrent(before, after);
         }).pop();
     }
 
