@@ -9,7 +9,7 @@ exports.repeat = function (count, func) {
     return result;
 };
 
-exports.lines = function (buf) {
+exports.lines = function lines(buf) {
     var result  = [[]],
         index   = 0,
         row     = 0,
@@ -32,20 +32,28 @@ exports.lines = function (buf) {
     return result;
 };
 
-exports.cursorBOL = function (buf) {
-    var distBOL = buf.findBack('\n');
+exports.cursorBOL = function cursorBOL(buf) {
+    var distBOL = buf.findBack('\n'),
+        prev;
 
     switch (distBOL) {
     case -1:
         return buf.cursorStart();
     case 0:
+        prev = buf.charAt(buf.cursorPosition() - 1);
+        if (prev === '\n') {
+            return buf.cursorCurrent();
+        }
+        buf.cursorBack();
+        return cursorBOL(buf);
+    case 1:
         return buf.cursorCurrent();
     default:
         return buf.cursorBack(distBOL - 1);
     }
 };
 
-exports.cursorEOL = function (buf) {
+exports.cursorEOL = function cursorEOL(buf) {
     var distEOL = buf.findForward('\n');
 
     switch (distEOL) {
