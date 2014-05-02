@@ -98,7 +98,7 @@ exports.Buffer = (function BufferClosure() {
             distToEOL   = this.indexOf('\n', position);
 
         this.cursorBack(distToBOL);
-        this.cursorBack(distToEOL);
+        return this.cursorBack(distToEOL);
     };
 
     Buffer.prototype.cursorDown = function () {
@@ -107,7 +107,7 @@ exports.Buffer = (function BufferClosure() {
             distToEOL   = this.indexOf('\n', position);
 
         this.cursorForward(distToBOL);
-        this.cursorForward(distToEOL);
+        return this.cursorForward(distToEOL);
     };
 
     return Buffer;

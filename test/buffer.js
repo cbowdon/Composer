@@ -55,12 +55,36 @@ exports.tests = [
         assert.deepEqual(buffer.cursorEnd(), { done: true });
     },
 
-    function Buffer_cursorUp() {
-        assert.fail("not yet implemented.");
+    function Buffer_cursorDown() {
+        var text = 'Hello, \nworld.\n\nIs it me...',
+            buffer = new Buffer(text);
+
+        buffer.cursorForward();
+        assert.deepEqual(buffer.cursorDown(), { done: false, value: 'o' });
+        assert.strictEqual(buffer.cursorPosition(), 8);
+
+        assert.deepEqual(buffer.cursorDown(), { done: false, value: '\n' });
+        assert.strictEqual(buffer.cursorPosition(), 15);
+
+        assert.deepEqual(buffer.cursorDown(), { done: false, value: ' ' });
+        assert.strictEqual(buffer.cursorPosition(), 17);
+
+        assert.deepEqual(buffer.cursorDown(), { done: false, value: ' ' });
+        assert.strictEqual(buffer.cursorPosition(), 17);
     },
 
-    function Buffer_cursorDown() {
-        assert.fail("not yet implemented.");
+    function Buffer_cursorUp() {
+        var text = 'Hello, \nworld.\n\nIs\n it me...',
+            buffer = new Buffer(text);
+
+        buffer.cursorEnd();
+        buffer.cursorBack(4);
+        assert.deepEqual(buffer.cursorCurrent(), { value: 'e', done: false });
+
+        assert.deepEqual(buffer.cursorUp(), { value: '\n', done: false });
+        assert.deepEqual(buffer.cursorUp(), { value: '\n', done: false });
+        assert.deepEqual(buffer.cursorUp(), { value: '.', done: false });
+        assert.deepEqual(buffer.cursorUp(), { value: ',', done: false });
     },
 
     function Buffer_findForward() {
