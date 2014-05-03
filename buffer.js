@@ -93,10 +93,15 @@ exports.Buffer = (function BufferClosure() {
     };
 
     Buffer.prototype.cursorUp = function () {
-        var position    = this.cursorPosition(),
-            distToBOL   = this.lastIndexOf('\n', position);
+        var origCol = this.cursorCol(),
+            distBOL = this.findBack('\n');
 
-        while (this.findBack('\n') > 0) {
+        if (distBOL === -1) {
+            return this.cursorCurrent();
+        }
+        this.cursorBack(distBOL + 1);
+
+        while (this.cursorCol() > origCol) {
             this.cursorBack();
         }
 
@@ -104,12 +109,20 @@ exports.Buffer = (function BufferClosure() {
     };
 
     Buffer.prototype.cursorDown = function () {
-        var position    = this.cursorPosition(),
-            distToBOL   = this.lastIndexOf('\n', position),
-            distToEOL   = this.indexOf('\n', position);
+        var origCol = this.cursorCol(),
+            distEOL = this.findForward('\n');
 
-        this.cursorForward(distToBOL);
-        return this.cursorForward(distToEOL);
+        if (distEOL === -1) {
+            return this.cursorCurrent();
+        }
+
+        this.cursorForward(distEOL + 1);
+
+        while (this.cursorCol() < origCol) {
+            this.cursorForward();
+        }
+
+        return this.cursorCurrent();
     };
 
     return Buffer;
