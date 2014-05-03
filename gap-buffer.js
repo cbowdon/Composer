@@ -71,6 +71,12 @@ exports.GapBuffer = (function GapBufferClosure() {
         }).pop();
     }
 
+    function cursorRow(before, after) {
+        return before.reduce(function (b, a) {
+            return a === '\n' ? b + 1 : b;
+        }, 0);
+    }
+
     function cut(before, after) {
         var result = after.pop();
         return result;
@@ -132,6 +138,10 @@ exports.GapBuffer = (function GapBufferClosure() {
             return result;
         };
 
+        this.cursorRow = function () {
+            return cursorRow(before, after);
+        };
+
         this.cut = function () {
             var result = cut(before, after);
             this.fireListeners('change', this);
@@ -155,6 +165,6 @@ exports.GapBuffer = (function GapBufferClosure() {
         }
     }
 
-    return GapBuffer;
+    return Object.seal(GapBuffer);
 
 }());

@@ -83,6 +83,21 @@ exports.tests = [
         assert.strictEqual(gapBuffer.cursorPosition(), 0);
     },
 
+    function GapBuffer_cursorRow() {
+        var text = "Hello, \nworld!\nIs it me you're looking for?",
+            gapBuffer = new GapBuffer(text);
+
+        assert.strictEqual(gapBuffer.cursorRow(), 0);
+        gapBuffer.cursorForward(7);
+        assert.strictEqual(gapBuffer.cursorRow(), 0);
+        gapBuffer.cursorForward(1);
+        assert.strictEqual(gapBuffer.cursorRow(), 1);
+        gapBuffer.cursorBack(1);
+        assert.strictEqual(gapBuffer.cursorRow(), 0);
+        gapBuffer.cursorForward(20);
+        assert.strictEqual(gapBuffer.cursorRow(), 2);
+    },
+
     function GapBuffer_load() {
         var gapBuffer = new GapBuffer('Hello');
 
