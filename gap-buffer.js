@@ -77,6 +77,13 @@ exports.GapBuffer = (function GapBufferClosure() {
         }, 0);
     }
 
+    function cursorCol(before, after) {
+        var lastNL = before.lastIndexOf('\n');
+        return lastNL === -1 ?
+                before.length :
+                before.length - lastNL - 1;
+    }
+
     function cut(before, after) {
         var result = after.pop();
         return result;
@@ -140,6 +147,10 @@ exports.GapBuffer = (function GapBufferClosure() {
 
         this.cursorRow = function () {
             return cursorRow(before, after);
+        };
+
+        this.cursorCol = function () {
+            return cursorCol(before, after);
         };
 
         this.cut = function () {
