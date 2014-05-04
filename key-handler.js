@@ -35,7 +35,7 @@ exports.KeyHandler = (function KeyHandlerClosure() {
 
         $(document).keypress(function (keyEvent) {
             var character = convert(keyEvent);
-            console.log(character, keyEvent.key, keyEvent.charCode, keyEvent);
+            //console.log(character, keyEvent.key, keyEvent.charCode, keyEvent);
             if (!keyEvent.metaKey) {
                 keyEvent.preventDefault();
             }

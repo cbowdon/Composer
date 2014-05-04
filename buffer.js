@@ -65,7 +65,7 @@ exports.Buffer = (function BufferClosure() {
         return this.charAt(this.cursorPosition() + 1);
     };
 
-    Buffer.prototype.cursorTo = function (index) {
+    Buffer.prototype.cursorToIndex = function (index) {
         if (index < 0 || index > this.length) {
             return undefined;
         }
@@ -78,16 +78,32 @@ exports.Buffer = (function BufferClosure() {
         return this.cursorCurrent();
     };
 
+    Buffer.prototype.cursorTo = function (character) {
+        var dist = this.findForward(character);
+
+        return dist === -1 || dist === 0 ?
+                this.cursorCurrent() :
+                this.cursorForward(dist);
+    };
+
+    Buffer.prototype.cursorBackTo = function (character) {
+        var dist = this.findBack(character);
+
+        return dist === -1 || dist === 0 ?
+                this.cursorCurrent() :
+                this.cursorBack(dist);
+    };
+
     Buffer.prototype.cursorStart = function () {
 
-        this.cursorTo(0);
+        this.cursorToIndex(0);
 
         return this.cursorCurrent();
     };
 
     Buffer.prototype.cursorEnd = function () {
 
-        this.cursorTo(this.length);
+        this.cursorToIndex(this.length);
 
         return this.cursorCurrent(); //  i.e. { done: true }
     };

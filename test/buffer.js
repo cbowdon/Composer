@@ -14,29 +14,75 @@ exports.tests = [
         assert.strictEqual(buffer.cursorPeek(), 'l', 2);
     },
 
-    function Buffer_cursorTo() {
+    function Buffer_cursorToIndex() {
         var buffer = new Buffer('Hello');
 
-        assert.strictEqual(buffer.cursorTo(3).value, 'l');
+        assert.strictEqual(buffer.cursorToIndex(3).value, 'l');
         assert.strictEqual(buffer.cursorPosition(), 3);
 
-        assert.strictEqual(buffer.cursorTo(0).value, 'H');
+        assert.strictEqual(buffer.cursorToIndex(0).value, 'H');
         assert.strictEqual(buffer.cursorPosition(), 0);
 
-        assert.strictEqual(buffer.cursorTo(4).value, 'o');
+        assert.strictEqual(buffer.cursorToIndex(4).value, 'o');
         assert.strictEqual(buffer.cursorPosition(), 4);
 
-        assert.strictEqual(buffer.cursorTo(2).value, 'l');
+        assert.strictEqual(buffer.cursorToIndex(2).value, 'l');
         assert.strictEqual(buffer.cursorPosition(), 2);
 
-        assert.strictEqual(buffer.cursorTo(-1), undefined);
+        assert.strictEqual(buffer.cursorToIndex(-1), undefined);
         assert.strictEqual(buffer.cursorPosition(), 2);
 
-        assert.strictEqual(buffer.cursorTo(6), undefined);
+        assert.strictEqual(buffer.cursorToIndex(6), undefined);
         assert.strictEqual(buffer.cursorPosition(), 2);
 
-        assert.deepEqual(buffer.cursorTo(5), { done: true });
+        assert.deepEqual(buffer.cursorToIndex(5), { done: true });
         assert.strictEqual(buffer.cursorPosition(), 5);
+    },
+
+    function Buffer_cursorTo() {
+        var text = "Hello, my baby,\nhello my honey,\nhello my ragtime gal\n",
+            buffer = new Buffer(text);
+
+        assert.strictEqual(buffer.cursorTo('\n').value, '\n', 'end of line 0');
+        assert.strictEqual(buffer.cursorPosition(), text.indexOf('\n'), 'end of line 0');
+
+        assert.strictEqual(buffer.cursorTo('h').value, 'h', 'line 1');
+        assert.strictEqual(buffer.cursorPosition(), text.indexOf('h', 2), 'line 1');
+
+        assert.strictEqual(buffer.cursorTo('\n').value, '\n', 'end of line 1');
+        assert.strictEqual(buffer.cursorPosition(), text.indexOf('\n', 20), 'end of line 1');
+
+        assert.strictEqual(buffer.cursorTo('\n').value, '\n', 'end of line 1 (no movement)');
+        assert.strictEqual(buffer.cursorPosition(), text.indexOf('\n', 20), 'end of line 1 (no movement)');
+
+        assert.strictEqual(buffer.cursorTo('z').value, '\n', 'end of line 1 (no movement)');
+        assert.strictEqual(buffer.cursorPosition(), text.indexOf('\n', 20), 'end of line 1 (no movement)');
+
+        buffer.cursorForward();
+
+        assert.strictEqual(buffer.cursorTo('\n').value, '\n', 'end of line 2');
+        assert.strictEqual(buffer.cursorPosition(), text.indexOf('\n', 40), 'end of line 2');
+    },
+
+    function Buffer_cursorBackTo() {
+        var text = "Hello, my baby,\nhello my honey,\nhello my ragtime gal\n",
+            buffer = new Buffer(text);
+
+        buffer.cursorEnd();
+
+        assert.strictEqual(buffer.cursorBackTo('g').value, 'g', 'line 2');
+        assert.strictEqual(buffer.cursorPosition(), text.lastIndexOf('g'), 'line 2');
+
+        assert.strictEqual(buffer.cursorBackTo('\n').value, '\n', 'line 1');
+        assert.strictEqual(buffer.cursorPosition(), text.lastIndexOf('\n', 40), 'line 1');
+
+        buffer.cursorBack();
+        assert.strictEqual(buffer.cursorBackTo('\n').value, '\n', 'line 0');
+        assert.strictEqual(buffer.cursorPosition(), text.indexOf('\n'), 'line 0');
+
+        buffer.cursorBack();
+        assert.strictEqual(buffer.cursorBackTo('\n').value, ',', 'line 0 (no movement)');
+        assert.strictEqual(buffer.cursorPosition(), text.indexOf(',', 10), 'line 0 (no movement)');
     },
 
     function Buffer_cursorStart() {
