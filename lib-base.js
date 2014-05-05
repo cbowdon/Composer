@@ -33,35 +33,9 @@ exports.lines = function lines(buf) {
 };
 
 exports.cursorBOL = function cursorBOL(buf) {
-    var distBOL = buf.findBack('\n'),
-        prev;
-
-    switch (distBOL) {
-    case -1:
-        return buf.cursorStart();
-    case 0:
-        prev = buf.charAt(buf.cursorPosition() - 1);
-        if (prev === '\n') {
-            return buf.cursorCurrent();
-        }
-        buf.cursorBack();
-        return cursorBOL(buf);
-    case 1:
-        return buf.cursorCurrent();
-    default:
-        return buf.cursorBack(distBOL - 1);
-    }
+    return buf.cursorToIndex(buf.startOfLine);
 };
 
 exports.cursorEOL = function cursorEOL(buf) {
-    var distEOL = buf.findForward('\n');
-
-    switch (distEOL) {
-    case -1:
-        return buf.cursorEnd();
-    case 0:
-        return buf.cursorCurrent();
-    default:
-        return buf.cursorForward(distEOL);
-    }
+    return buf.cursorToIndex(buf.endOfLine);
 };

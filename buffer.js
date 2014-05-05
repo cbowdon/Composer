@@ -21,6 +21,38 @@ exports.Buffer = (function BufferClosure() {
 
     Buffer.prototype.constructor = Buffer;
 
+    Object.defineProperties(Buffer.prototype, {
+        start: {
+            value: 0,
+        },
+        end: {
+            get: function () { return this.length; },
+        },
+        startOfLine: {
+            get: function () {
+                var prv = this.prev('\n'),
+                    idx = this.index;
+
+                switch (prv) {
+                case -1: // start of buffer
+                    return this.start;
+                case idx: // on '\n'
+                    return this.charAt(idx - 1) === '\n' ?
+                            idx : // blank line
+                            this.lastIndexOf('\n', idx - 1) + 1; // end-line
+                default: // mid-line
+                    return prv + 1;
+                }
+            },
+        },
+        endOfLine: {
+            get: function () {
+                var nxt = this.next('\n');
+                return nxt === -1 ? this.end : nxt;
+            },
+        },
+    });
+
     Buffer.prototype.indexOf = function (character, fromIndex) {
         var offset = fromIndex || 0,
             i;
@@ -47,6 +79,14 @@ exports.Buffer = (function BufferClosure() {
         }
 
         return -1;
+    };
+
+    Buffer.prototype.next = function (character) {
+        return this.indexOf(character, this.index);
+    };
+
+    Buffer.prototype.prev = function (character) {
+        return this.lastIndexOf(character, this.index);
     };
 
     Buffer.prototype.findForward = function (character) {
@@ -105,7 +145,7 @@ exports.Buffer = (function BufferClosure() {
 
         this.cursorToIndex(this.length);
 
-        return this.cursorCurrent(); //  i.e. { done: true }
+        return { done: true };
     };
 
     Buffer.prototype.cursorUp = function () {

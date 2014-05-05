@@ -110,6 +110,9 @@ exports.GapBuffer = (function GapBufferClosure() {
 
         Object.defineProperties(this, {
             length: { get: function () { return before.length + after.length; } },
+            index: { get: function () { return cursorPosition(before, after); } },
+            row: { get: function () { return cursorRow(before, after); } },
+            col: { get: function () { return cursorCol(before, after); } },
         });
 
         this.load = function (text) {

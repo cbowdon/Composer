@@ -5,6 +5,45 @@ var assert = require('assert'),
     Buffer = require('../buffer').Buffer;
 
 exports.tests = [
+    function Buffer_startOfLine() {
+        var text    = 'Hello\n\nworld,\nhello',
+            buffer  = new Buffer(text);
+
+        buffer.cursorToIndex(3);
+        assert.strictEqual(buffer.startOfLine, 0, 'start of buffer');
+
+        buffer.cursorToIndex(6);
+        assert.strictEqual(buffer.startOfLine, 6, 'blank line');
+
+        buffer.cursorToIndex(7);
+        assert.strictEqual(buffer.startOfLine, 7, 'start of line');
+
+        buffer.cursorToIndex(8);
+        assert.strictEqual(buffer.startOfLine, 7, 'mid line');
+
+        buffer.cursorToIndex(13);
+        assert.strictEqual(buffer.startOfLine, 7, 'end of line');
+    },
+
+    function Buffer_endOfLine() {
+        var text    = 'Hello\n\nworld,\nhello',
+            buffer  = new Buffer(text);
+
+        buffer.cursorToIndex(6);
+        assert.strictEqual(buffer.endOfLine, 6, 'blank line');
+
+        buffer.cursorToIndex(7);
+        assert.strictEqual(buffer.endOfLine, 13, 'start of line');
+
+        buffer.cursorToIndex(8);
+        assert.strictEqual(buffer.endOfLine, 13, 'mid line');
+
+        buffer.cursorToIndex(13);
+        assert.strictEqual(buffer.endOfLine, 13, 'end of line');
+
+        buffer.cursorToIndex(14);
+        assert.strictEqual(buffer.endOfLine, text.length, 'end of buffer');
+    },
 
     function Buffer_cursorPeek() {
         var buffer = new Buffer('Hello');
