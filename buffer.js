@@ -22,6 +22,18 @@ exports.Buffer = (function BufferClosure() {
     Buffer.prototype.constructor = Buffer;
 
     Object.defineProperties(Buffer.prototype, {
+        left: {
+            get: function () { return this.index - 1; },
+        },
+        right: {
+            get: function () { return this.index + 1; },
+        },
+        up: {
+            get: function () { },
+        },
+        down: {
+            get: function () { },
+        },
         start: {
             value: 0,
         },
@@ -30,16 +42,15 @@ exports.Buffer = (function BufferClosure() {
         },
         startOfLine: {
             get: function () {
-                var prv = this.prev('\n'),
-                    idx = this.index;
+                var prv = this.prev('\n');
 
                 switch (prv) {
                 case -1: // start of buffer
                     return this.start;
-                case idx: // on '\n'
-                    return this.charAt(idx - 1) === '\n' ?
-                            idx : // blank line
-                            this.lastIndexOf('\n', idx - 1) + 1; // end-line
+                case this.index: // on '\n'
+                    return this.charAt(this.left) === '\n' ?
+                            this.index : // blank line
+                            this.lastIndexOf('\n', this.left) + 1; // end-line
                 default: // mid-line
                     return prv + 1;
                 }
@@ -90,29 +101,29 @@ exports.Buffer = (function BufferClosure() {
     };
 
     Buffer.prototype.findForward = function (character) {
-        var index = this.indexOf(character, this.cursorPosition());
+        var index = this.indexOf(character, this.index);
 
-        return index === -1 ? index : index - this.cursorPosition();
+        return index === -1 ? index : index - this.index;
     };
 
     Buffer.prototype.findBack = function (character) {
-        var index = this.lastIndexOf(character, this.cursorPosition());
+        var index = this.lastIndexOf(character, this.index);
 
-        return index === -1 ? index : this.cursorPosition() - index;
+        return index === -1 ? index : this.index - index;
     };
 
     Buffer.prototype.cursorPeek = function () {
-        return this.charAt(this.cursorPosition() + 1);
+        return this.charAt(this.index + 1);
     };
 
     Buffer.prototype.cursorToIndex = function (index) {
         if (index < 0 || index > this.length) {
             return undefined;
         }
-        while (this.cursorPosition() > index) {
+        while (this.index > index) {
             this.cursorBack();
         }
-        while (this.cursorPosition() < index) {
+        while (this.index < index) {
             this.cursorForward();
         }
         return this.cursorCurrent();
@@ -135,21 +146,15 @@ exports.Buffer = (function BufferClosure() {
     };
 
     Buffer.prototype.cursorStart = function () {
-
-        this.cursorToIndex(0);
-
-        return this.cursorCurrent();
+        return this.cursorToIndex(this.start);
     };
 
     Buffer.prototype.cursorEnd = function () {
-
-        this.cursorToIndex(this.length);
-
-        return { done: true };
+        return this.cursorToIndex(this.end);
     };
 
     Buffer.prototype.cursorUp = function () {
-        var origCol = this.cursorCol(),
+        var origCol = this.col,
             distBOL = this.findBack('\n');
 
         if (distBOL === -1) {
@@ -157,7 +162,7 @@ exports.Buffer = (function BufferClosure() {
         }
         this.cursorBack(distBOL + 1);
 
-        while (this.cursorCol() > origCol) {
+        while (this.col > origCol) {
             this.cursorBack();
         }
 
@@ -165,7 +170,7 @@ exports.Buffer = (function BufferClosure() {
     };
 
     Buffer.prototype.cursorDown = function () {
-        var origCol = this.cursorCol(),
+        var origCol = this.col,
             distEOL = this.findForward('\n');
 
         if (distEOL === -1) {
@@ -174,7 +179,7 @@ exports.Buffer = (function BufferClosure() {
 
         this.cursorForward(distEOL + 1);
 
-        while (this.cursorCol() < origCol) {
+        while (this.col < origCol) {
             this.cursorForward();
         }
 
