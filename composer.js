@@ -7,8 +7,8 @@ var Buffer      = require('./buffer').Buffer,
 
 exports.Composer = (function ComposerClosure() {
 
-    function Composer() {
-        this.buffer = new Buffer();
+    function Composer(text) {
+        this.buffer = new Buffer(text);
         this.interpreter = new Interpreter(this.buffer);
     }
 

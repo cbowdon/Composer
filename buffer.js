@@ -29,10 +29,13 @@ exports.Buffer = (function BufferClosure() {
             get: function () { return this.index + 1; },
         },
         up: {
-            get: function () { },
+            get: function () {
+            },
         },
         down: {
-            get: function () { },
+            get: function () {
+                return this.endOfLine + this.col + 1;
+            },
         },
         start: {
             value: 0,
@@ -40,26 +43,39 @@ exports.Buffer = (function BufferClosure() {
         end: {
             get: function () { return this.length; },
         },
+        line: {
+            get: function () {
+                var sol = this.prev('\n'),
+                    eol = this.next('\n');
+
+                if (eol === -1) {
+                    eol = this.end;
+                }
+
+                if (sol === -1) {
+                    sol = this.start;
+                } else if (sol === eol) {
+                    // index is on '\n', look back further
+                    sol = this.lastIndexOf('\n', this.index - 1) + 1;
+                } else {
+                    sol += 1;
+                }
+
+                return {
+                    start: sol,
+                    end: eol,
+                    length: eol - sol,
+                };
+            },
+        },
         startOfLine: {
             get: function () {
-                var prv = this.prev('\n');
-
-                switch (prv) {
-                case -1: // start of buffer
-                    return this.start;
-                case this.index: // on '\n'
-                    return this.charAt(this.left) === '\n' ?
-                            this.index : // blank line
-                            this.lastIndexOf('\n', this.left) + 1; // end-line
-                default: // mid-line
-                    return prv + 1;
-                }
+                return this.line.start;
             },
         },
         endOfLine: {
             get: function () {
-                var nxt = this.next('\n');
-                return nxt === -1 ? this.end : nxt;
+                return this.line.end;
             },
         },
     });
@@ -154,36 +170,11 @@ exports.Buffer = (function BufferClosure() {
     };
 
     Buffer.prototype.cursorUp = function () {
-        var origCol = this.col,
-            distBOL = this.findBack('\n');
-
-        if (distBOL === -1) {
-            return this.cursorCurrent();
-        }
-        this.cursorBack(distBOL + 1);
-
-        while (this.col > origCol) {
-            this.cursorBack();
-        }
-
-        return this.cursorCurrent();
+        return this.cursorToIndex(this.up);
     };
 
     Buffer.prototype.cursorDown = function () {
-        var origCol = this.col,
-            distEOL = this.findForward('\n');
-
-        if (distEOL === -1) {
-            return this.cursorCurrent();
-        }
-
-        this.cursorForward(distEOL + 1);
-
-        while (this.col < origCol) {
-            this.cursorForward();
-        }
-
-        return this.cursorCurrent();
+        return this.cursorToIndex(this.down);
     };
 
     return Buffer;

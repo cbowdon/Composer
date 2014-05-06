@@ -5,10 +5,12 @@ var KeyHandler  = require('./key-handler').KeyHandler,
     CanvasDisplay  = require('./canvas-display').CanvasDisplay,
     Composer    = require('./composer').Composer;
 
+var test = "Hello,\nworld,\n\nhow's it going?\nAll's well,\nI trust.";
+
 (function Main() {
     var keyHandler  = new KeyHandler(document),
         display     = new CanvasDisplay(100, 80),
-        composer    = new Composer();
+        composer    = new Composer(test);
 
     // subscribe composer to key presses
     keyHandler.addEventListener('input', function (keyEvent) {
