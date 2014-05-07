@@ -145,16 +145,18 @@ exports.tests = [
             buffer = new Buffer(text);
 
         buffer.cursorForward();
-        assert.deepEqual(buffer.cursorDown(), { done: false, value: 'o' });
+        assert.deepEqual(buffer.cursorCurrent(), { value: 'e', done: false }, 'line 0 col 1');
+
+        assert.deepEqual(buffer.cursorDown(), { done: false, value: 'o' }, 'line 1 col 1');
         assert.strictEqual(buffer.cursorPosition(), 8);
 
-        assert.deepEqual(buffer.cursorDown(), { done: false, value: '\n' });
+        assert.deepEqual(buffer.cursorDown(), { done: false, value: '\n' }, 'line 2 col 0');
         assert.strictEqual(buffer.cursorPosition(), 15);
 
-        assert.deepEqual(buffer.cursorDown(), { done: false, value: ' ' });
+        assert.deepEqual(buffer.cursorDown(), { done: false, value: 's' }, 'line 3 col 1');
         assert.strictEqual(buffer.cursorPosition(), 17);
 
-        assert.deepEqual(buffer.cursorDown(), { done: false, value: ' ' });
+        assert.deepEqual(buffer.cursorDown(), { done: false, value: 's' }, 'line 3 (no movement)');
         assert.strictEqual(buffer.cursorPosition(), 17);
     },
 
@@ -164,12 +166,13 @@ exports.tests = [
 
         buffer.cursorEnd();
         buffer.cursorBack(4);
-        assert.deepEqual(buffer.cursorCurrent(), { value: 'e', done: false });
 
-        assert.deepEqual(buffer.cursorUp(), { value: '\n', done: false });
-        assert.deepEqual(buffer.cursorUp(), { value: '\n', done: false });
-        assert.deepEqual(buffer.cursorUp(), { value: '.', done: false });
-        assert.deepEqual(buffer.cursorUp(), { value: ',', done: false });
+        assert.deepEqual(buffer.cursorCurrent(), { value: 'e', done: false }, 'line 4 col 5');
+        assert.deepEqual(buffer.cursorUp(), { value: '\n', done: false }, 'line 3 col 2');
+        assert.deepEqual(buffer.cursorUp(), { value: '\n', done: false }, 'line 2 col 0');
+        assert.deepEqual(buffer.cursorUp(), { value: '.', done: false }, 'line 1 col 5');
+        assert.deepEqual(buffer.cursorUp(), { value: ',', done: false }, 'line 0 col 5');
+        assert.deepEqual(buffer.cursorUp(), { value: ',', done: false }, 'line 0 (no movement)');
     },
 
     function Buffer_findForward() {

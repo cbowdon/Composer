@@ -30,6 +30,11 @@ exports.Buffer = (function BufferClosure() {
         },
         up: {
             get: function () {
+                var curLn   = this.line(this.index),
+                    prvLn   = this.line(curLn.start - 1),
+                    col     = this.col;
+
+                return Math.min(prvLn.start + col, prvLn.end);
             },
         },
         down: {
@@ -43,42 +48,41 @@ exports.Buffer = (function BufferClosure() {
         end: {
             get: function () { return this.length; },
         },
-        line: {
-            get: function () {
-                var sol = this.prev('\n'),
-                    eol = this.next('\n');
-
-                if (eol === -1) {
-                    eol = this.end;
-                }
-
-                if (sol === -1) {
-                    sol = this.start;
-                } else if (sol === eol) {
-                    // index is on '\n', look back further
-                    sol = this.lastIndexOf('\n', this.index - 1) + 1;
-                } else {
-                    sol += 1;
-                }
-
-                return {
-                    start: sol,
-                    end: eol,
-                    length: eol - sol,
-                };
-            },
-        },
         startOfLine: {
             get: function () {
-                return this.line.start;
+                return this.line(this.index).start;
             },
         },
         endOfLine: {
             get: function () {
-                return this.line.end;
+                return this.line(this.index).end;
             },
         },
     });
+
+    Buffer.prototype.line = function (index) {
+        var sol = this.lastIndexOf('\n', index),
+            eol = this.indexOf('\n', index);
+
+        if (eol === -1) {
+            eol = this.end;
+        }
+
+        if (sol === -1) {
+            sol = this.start;
+        } else if (sol === eol) {
+            // index is on '\n', look back further
+            sol = this.lastIndexOf('\n', index - 1) + 1;
+        } else {
+            sol += 1;
+        }
+
+        return {
+            start: sol,
+            end: eol,
+            length: eol - sol,
+        };
+    };
 
     Buffer.prototype.indexOf = function (character, fromIndex) {
         var offset = fromIndex || 0,
