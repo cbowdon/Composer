@@ -28,18 +28,22 @@ exports.Buffer = (function BufferClosure() {
         right: {
             get: function () { return this.index + 1; },
         },
+        virtualCol: {
+            value: 0,
+            writable: true,
+        },
         up: {
             get: function () {
                 var curLn   = this.line(this.index),
                     prvLn   = this.line(curLn.start - 1),
-                    col     = this.col;
+                    col     = this.virtualCol;
 
                 return Math.min(prvLn.start + col, prvLn.end);
             },
         },
         down: {
             get: function () {
-                return this.endOfLine + this.col + 1;
+                return this.endOfLine + this.virtualCol + 1;
             },
         },
         start: {
@@ -179,6 +183,18 @@ exports.Buffer = (function BufferClosure() {
 
     Buffer.prototype.cursorDown = function () {
         return this.cursorToIndex(this.down);
+    };
+
+    Buffer.prototype.cursorLeft = function (count) {
+        this.cursorBack(count);
+        this.virtualCol = this.col;
+        return this.cursorCurrent();
+    };
+
+    Buffer.prototype.cursorRight = function (count) {
+        this.cursorForward(count);
+        this.virtualCol = this.col;
+        return this.cursorCurrent();
     };
 
     return Buffer;

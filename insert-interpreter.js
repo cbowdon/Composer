@@ -22,14 +22,14 @@ exports.InsertInterpreter = (function InsertInterpreterClosure() {
             return this.buffer.cut();
         }
         if (character === '<Backspace>') {
-            this.buffer.cursorBack();
+            this.buffer.cursorLeft();
             return this.buffer.cut();
         }
         if (character === '<Left>') {
-            return this.buffer.cursorBack();
+            return this.buffer.cursorLeft();
         }
         if (character === '<Right>') {
-            return this.buffer.cursorForward();
+            return this.buffer.cursorRight();
         }
         if (character === '<Up>') {
             return this.buffer.cursorUp();

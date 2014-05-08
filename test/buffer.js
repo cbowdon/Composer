@@ -49,7 +49,7 @@ exports.tests = [
         var buffer = new Buffer('Hello');
 
         assert.deepEqual(buffer.cursorCurrent(), { value: 'H', done: false }, 0);
-        assert.strictEqual(buffer.cursorForward().value, 'e', 1);
+        assert.strictEqual(buffer.cursorRight().value, 'e', 1);
         assert.strictEqual(buffer.cursorPeek(), 'l', 2);
     },
 
@@ -97,7 +97,7 @@ exports.tests = [
         assert.strictEqual(buffer.cursorTo('z').value, '\n', 'end of line 1 (no movement)');
         assert.strictEqual(buffer.cursorPosition(), text.indexOf('\n', 20), 'end of line 1 (no movement)');
 
-        buffer.cursorForward();
+        buffer.cursorRight();
 
         assert.strictEqual(buffer.cursorTo('\n').value, '\n', 'end of line 2');
         assert.strictEqual(buffer.cursorPosition(), text.indexOf('\n', 40), 'end of line 2');
@@ -115,11 +115,11 @@ exports.tests = [
         assert.strictEqual(buffer.cursorBackTo('\n').value, '\n', 'line 1');
         assert.strictEqual(buffer.cursorPosition(), text.lastIndexOf('\n', 40), 'line 1');
 
-        buffer.cursorBack();
+        buffer.cursorLeft();
         assert.strictEqual(buffer.cursorBackTo('\n').value, '\n', 'line 0');
         assert.strictEqual(buffer.cursorPosition(), text.indexOf('\n'), 'line 0');
 
-        buffer.cursorBack();
+        buffer.cursorLeft();
         assert.strictEqual(buffer.cursorBackTo('\n').value, ',', 'line 0 (no movement)');
         assert.strictEqual(buffer.cursorPosition(), text.indexOf(',', 10), 'line 0 (no movement)');
     },
@@ -127,7 +127,7 @@ exports.tests = [
     function Buffer_cursorStart() {
         var buffer = new Buffer('Hello');
 
-        buffer.cursorForward(3);
+        buffer.cursorRight(3);
 
         assert.deepEqual(buffer.cursorStart(), { value: 'H', done: false });
     },
@@ -135,7 +135,7 @@ exports.tests = [
     function Buffer_cursorEnd() {
         var buffer = new Buffer('Hello');
 
-        buffer.cursorForward(3);
+        buffer.cursorRight(3);
 
         assert.deepEqual(buffer.cursorEnd(), { done: true });
     },
@@ -144,7 +144,7 @@ exports.tests = [
         var text = 'Hello, \nworld.\n\nIs it me...',
             buffer = new Buffer(text);
 
-        buffer.cursorForward();
+        buffer.cursorRight();
         assert.deepEqual(buffer.cursorCurrent(), { value: 'e', done: false }, 'line 0 col 1');
 
         assert.deepEqual(buffer.cursorDown(), { done: false, value: 'o' }, 'line 1 col 1');
@@ -165,7 +165,7 @@ exports.tests = [
             buffer = new Buffer(text);
 
         buffer.cursorEnd();
-        buffer.cursorBack(4);
+        buffer.cursorLeft(4);
 
         assert.deepEqual(buffer.cursorCurrent(), { value: 'e', done: false }, 'line 4 col 5');
         assert.deepEqual(buffer.cursorUp(), { value: '\n', done: false }, 'line 3 col 2');
@@ -178,7 +178,7 @@ exports.tests = [
     function Buffer_findForward() {
         var buffer = new Buffer('Hello, \nworld');
 
-        buffer.cursorForward();
+        buffer.cursorRight();
 
         assert.strictEqual(buffer.findForward('H'), -1, "H");
         assert.strictEqual(buffer.findForward('e'), 0, "e");
@@ -189,7 +189,7 @@ exports.tests = [
     function Buffer_findBack() {
         var buffer = new Buffer('Hello');
 
-        buffer.cursorForward(3);
+        buffer.cursorRight(3);
 
         assert.strictEqual(buffer.findBack('H'), 3, "H");
         assert.strictEqual(buffer.findBack('e'), 2, "e");
@@ -204,7 +204,7 @@ exports.tests = [
         assert.strictEqual(buffer.indexOf('w'), 8, "w");
         assert.strictEqual(buffer.indexOf('w', 1), 8, "w, 1");
 
-        buffer.cursorForward(3);
+        buffer.cursorRight(3);
 
         assert.strictEqual(buffer.indexOf('w', 1), 8, "w, 1 (cursor+3)");
         assert.strictEqual(buffer.indexOf('e', 6), -1, "e, 6 (cursor+3)");
@@ -221,7 +221,7 @@ exports.tests = [
         assert.strictEqual(buffer.lastIndexOf('x', 3), -1);
         assert.strictEqual(buffer.lastIndexOf('w', 0), -1);
 
-        buffer.cursorForward(3);
+        buffer.cursorRight(3);
 
         assert.strictEqual(buffer.lastIndexOf('l'), 11);
         assert.strictEqual(buffer.lastIndexOf('l', 3), 3);
