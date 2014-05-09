@@ -148,7 +148,7 @@ exports.tests = [
         assert.deepEqual(buffer.cursorCurrent(), { value: 'e', done: false }, 'line 0 col 1');
 
         assert.deepEqual(buffer.cursorDown(), { done: false, value: 'o' }, 'line 1 col 1');
-        assert.strictEqual(buffer.cursorPosition(), 8);
+        assert.strictEqual(buffer.cursorPosition(), 9);
 
         assert.deepEqual(buffer.cursorDown(), { done: false, value: '\n' }, 'line 2 col 0');
         assert.strictEqual(buffer.cursorPosition(), 15);

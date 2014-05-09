@@ -43,7 +43,11 @@ exports.Buffer = (function BufferClosure() {
         },
         down: {
             get: function () {
-                return this.endOfLine + this.virtualCol + 1;
+                var curLn   = this.line(this.index),
+                    nxtLn   = this.line(curLn.end + 1),
+                    col     = this.virtualCol;
+
+                return Math.min(nxtLn.start + col, nxtLn.end);
             },
         },
         start: {
