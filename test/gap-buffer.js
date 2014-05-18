@@ -19,6 +19,12 @@ exports.tests = [
             .insert('o');
 
         assert.strictEqual(gapBuffer.toString(), 'Hello, world');
+
+        gapBuffer.insert(', hello');
+        assert.strictEqual(gapBuffer.toString(), 'Hello, hello, world');
+
+        gapBuffer.insert([',', ' ', 'h', 'e', 'l', 'l', 'o']);
+        assert.strictEqual(gapBuffer.toString(), 'Hello, hello, hello, world');
     },
 
     function GapBuffer_update() {

@@ -86,6 +86,18 @@ exports.tests = [
         assert.deepEqual(cursor.up(), { value: ',', done: false }, 'line 0 (no movement)');
     },
 
+    function Cursor_down_when_inserting() {
+        var text = '012345\nn0123\n\n0123456',
+            buffer = new Buffer(text),
+            cursor = buffer.cursor;
+
+        cursor.endOfLine();
+        buffer.insert('6');
+
+        assert.fail('there is a bug');
+
+    },
+
     function Cursor_peek() {
         var buffer = new Buffer('Hello'),
             cursor  = buffer.cursor;

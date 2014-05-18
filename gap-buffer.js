@@ -7,6 +7,10 @@ var publisher   = require('./publisher'),
 exports.GapBuffer = (function GapBufferClosure() {
 
     // 'Private' helper functions
+    function isSingleChar(c) {
+        return typeof c === 'string' && c.length === 1;
+    }
+
     function toString(before, after) {
         return before
             .concat(after.slice(0).reverse())
@@ -95,8 +99,13 @@ exports.GapBuffer = (function GapBufferClosure() {
     }
 
     function update(before, after, character) {
-        after.pop();
-        after.push(character);
+        // implemented in terms of other functions, not simply
+        // after.pop()
+        // after.push(character)
+        // because of EVIL MASTERPLAN
+        cut(before, after);
+        insert(before, after, character);
+        cursorBack(before, after);
     }
 
     // Actual 'class'
@@ -160,8 +169,25 @@ exports.GapBuffer = (function GapBufferClosure() {
             return result;
         };
 
-        this.insert = function (character) {
-            insert(before, after, character);
+        this.insert = function (arg) {
+
+            if (isSingleChar(arg)) {
+
+                insert(before, after, arg);
+
+            } else if (typeof arg === 'string') {
+
+                arg.split('').forEach(insert.bind(null, before, after));
+
+            } else if (typeof arg === 'object' && arg.every(isSingleChar)) {
+
+                arg.forEach(insert.bind(null, before, after));
+
+            } else {
+
+                throw new TypeError('Expecting a string or an array of chars');
+
+            }
             this.fireListeners('change', this);
             return this;
         };
