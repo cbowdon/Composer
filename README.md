@@ -30,6 +30,7 @@ Agile - release a turd, then polish. Paraphrasing slightly.
 
 * v0.2.x
 - Adds normal mode operators like change and delete.
+- Adds undo.
 
 * v0.3.x
 - Adds command mode.
@@ -47,5 +48,20 @@ Sort of a multi-interpreter Emacs:
 - Subeditor environment (available as API to interpreters)
     - The Buffer router (manages multiple buffers)
         - Buffers
-    - Functions library
-+ Redisplay code
+            - Registers
+            - Cursor
+            - History/undo
+    - Functions libraries
++ Redisplay
+
+### Buffer history (undo functionality)
+Best plan for this I can think of:
+- all actions are compositions of a few reversible core actions
+- every action is saved as transaction containing said core actions
+- undoing a transaction is simply reversing all the core actions within
+- reversible core actions are (probably):
+    + cursor forward/back
+    + insert
+    + cut
+    + read (a no-op when undoing)
+- potentially a mini-DSL? Looking a bit like assembly.

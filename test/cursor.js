@@ -87,15 +87,19 @@ exports.tests = [
     },
 
     function Cursor_down_when_inserting() {
-        var text = '012345\nn0123\n\n0123456',
+        var text = '012345\n0123\n\n0123456',
             buffer = new Buffer(text),
             cursor = buffer.cursor;
 
-        cursor.endOfLine();
-        buffer.insert('6');
+        buffer.insert('xyz');
+        assert.strictEqual(buffer.row, 0, 'after insert');
+        assert.strictEqual(buffer.col, 3, 'after insert');
+        assert.strictEqual(buffer.index, 3, 'after insert');
 
-        assert.fail('there is a bug');
-
+        cursor.down();
+        assert.strictEqual(buffer.row, 1, 'after down');
+        assert.strictEqual(buffer.col, 3, 'after down');
+        assert.strictEqual(buffer.index, 14, 'after down');
     },
 
     function Cursor_peek() {
