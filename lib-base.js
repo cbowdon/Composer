@@ -20,7 +20,7 @@ exports.lines = function lines(buf) {
         result[row].push({
             character: character,
             index: index,
-            cursor: buf.cursorPosition() === index,
+            cursor: buf.index === index,
         });
         if (character === '\n') {
             result.push([]);
@@ -30,12 +30,4 @@ exports.lines = function lines(buf) {
     }
 
     return result;
-};
-
-exports.cursorBOL = function cursorBOL(buf) {
-    return buf.cursorToIndex(buf.startOfLine);
-};
-
-exports.cursorEOL = function cursorEOL(buf) {
-    return buf.cursorToIndex(buf.endOfLine);
 };

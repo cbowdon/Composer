@@ -55,32 +55,32 @@ exports.tests = [
         assert.strictEqual(gapBuffer.cursorBack().value, 'o', 9);
     },
 
-    function GapBuffer_cursorPosition() {
+    function GapBuffer_index() {
         var gapBuffer = new GapBuffer('Hello');
 
-        assert.strictEqual(gapBuffer.cursorPosition(), 0);
+        assert.strictEqual(gapBuffer.index, 0);
 
         gapBuffer.cursorForward();
-        assert.strictEqual(gapBuffer.cursorPosition(), 1);
+        assert.strictEqual(gapBuffer.index, 1);
         gapBuffer.cursorForward(1);
-        assert.strictEqual(gapBuffer.cursorPosition(), 2);
+        assert.strictEqual(gapBuffer.index, 2);
 
         gapBuffer.cursorForward(3);
-        assert.strictEqual(gapBuffer.cursorPosition(), 5);
+        assert.strictEqual(gapBuffer.index, 5);
 
         gapBuffer.cursorForward();
-        assert.strictEqual(gapBuffer.cursorPosition(), 5);
+        assert.strictEqual(gapBuffer.index, 5);
 
         gapBuffer.cursorBack();
-        assert.strictEqual(gapBuffer.cursorPosition(), 4);
+        assert.strictEqual(gapBuffer.index, 4);
         gapBuffer.cursorBack();
-        assert.strictEqual(gapBuffer.cursorPosition(), 3);
+        assert.strictEqual(gapBuffer.index, 3);
 
         gapBuffer.cursorBack(3);
-        assert.strictEqual(gapBuffer.cursorPosition(), 0);
+        assert.strictEqual(gapBuffer.index, 0);
 
         gapBuffer.cursorBack();
-        assert.strictEqual(gapBuffer.cursorPosition(), 0);
+        assert.strictEqual(gapBuffer.index, 0);
     },
 
     function GapBuffer_cursorRow() {

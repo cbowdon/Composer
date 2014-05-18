@@ -1,27 +1,20 @@
 /*jslint node: true */
 'use strict';
 
-var GapBuffer = require('./gap-buffer').GapBuffer;
+var GapBuffer   = require('./gap-buffer').GapBuffer,
+    Cursor      = require('./cursor').Cursor;
 
 exports.Buffer = (function BufferClosure() {
 
-    function reverseIndex(array, value) {
-        var i, len = array.length;
-        for (i = len - 1; i >= 0; i -= 1) {
-            if (array[i] === value) {
-                return len - 1 - i;
-            }
-        }
-        return -1;
-    }
-
     function Buffer(text) {
         GapBuffer.call(this, text);
+        this.cursor = new Cursor(this);
     }
 
     Buffer.prototype.constructor = Buffer;
 
     Object.defineProperties(Buffer.prototype, {
+        // Basic cursor directions
         left: {
             get: function () { return this.index - 1; },
         },
@@ -50,12 +43,14 @@ exports.Buffer = (function BufferClosure() {
                 return Math.min(nxtLn.start + col, nxtLn.end);
             },
         },
+        // Start/end of buffer
         start: {
             value: 0,
         },
         end: {
             get: function () { return this.length; },
         },
+        // Start/end of line
         startOfLine: {
             get: function () {
                 return this.line(this.index).start;
@@ -67,6 +62,8 @@ exports.Buffer = (function BufferClosure() {
             },
         },
     });
+
+    // Read-only functions
 
     Buffer.prototype.line = function (index) {
         var sol = this.lastIndexOf('\n', index),
@@ -138,67 +135,6 @@ exports.Buffer = (function BufferClosure() {
         var index = this.lastIndexOf(character, this.index);
 
         return index === -1 ? index : this.index - index;
-    };
-
-    Buffer.prototype.cursorPeek = function () {
-        return this.charAt(this.index + 1);
-    };
-
-    Buffer.prototype.cursorToIndex = function (index) {
-        if (index < 0 || index > this.length) {
-            return undefined;
-        }
-        while (this.index > index) {
-            this.cursorBack();
-        }
-        while (this.index < index) {
-            this.cursorForward();
-        }
-        return this.cursorCurrent();
-    };
-
-    Buffer.prototype.cursorTo = function (character) {
-        var dist = this.findForward(character);
-
-        return dist === -1 || dist === 0 ?
-                this.cursorCurrent() :
-                this.cursorForward(dist);
-    };
-
-    Buffer.prototype.cursorBackTo = function (character) {
-        var dist = this.findBack(character);
-
-        return dist === -1 || dist === 0 ?
-                this.cursorCurrent() :
-                this.cursorBack(dist);
-    };
-
-    Buffer.prototype.cursorStart = function () {
-        return this.cursorToIndex(this.start);
-    };
-
-    Buffer.prototype.cursorEnd = function () {
-        return this.cursorToIndex(this.end);
-    };
-
-    Buffer.prototype.cursorUp = function () {
-        return this.cursorToIndex(this.up);
-    };
-
-    Buffer.prototype.cursorDown = function () {
-        return this.cursorToIndex(this.down);
-    };
-
-    Buffer.prototype.cursorLeft = function (count) {
-        this.cursorBack(count);
-        this.virtualCol = this.col;
-        return this.cursorCurrent();
-    };
-
-    Buffer.prototype.cursorRight = function (count) {
-        this.cursorForward(count);
-        this.virtualCol = this.col;
-        return this.cursorCurrent();
     };
 
     return Buffer;

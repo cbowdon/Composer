@@ -6,6 +6,7 @@ var publisher   = require('./publisher'),
 
 exports.GapBuffer = (function GapBufferClosure() {
 
+    // 'Private' helper functions
     function toString(before, after) {
         return before
             .concat(after.slice(0).reverse())
@@ -98,6 +99,7 @@ exports.GapBuffer = (function GapBufferClosure() {
         after.push(character);
     }
 
+    // Actual 'class'
     function GapBuffer(text) {
         // Actually implemented as 2 stacks rather than the
         // traditional giant split buffer with pointers.
@@ -130,10 +132,6 @@ exports.GapBuffer = (function GapBufferClosure() {
 
         this.cursorCurrent = function () {
             return cursorCurrent(before, after);
-        };
-
-        this.cursorPosition = function () {
-            return cursorPosition(before, after);
         };
 
         this.cursorForward = function (count) {

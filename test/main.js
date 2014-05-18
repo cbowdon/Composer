@@ -8,12 +8,11 @@ var failCount,
 testSuites = [
     require('./publisher'),
     require('./queue'),
-    require('./lib-base'),
     require('./buffer'),
+    require('./lib-base'),
+    require('./cursor'),
     require('./gap-buffer'),
-    require('./frame'),
     require('./buffer-router'),
-    require('./normal-functions'),
 ];
 
 failCount = testSuites.reduce(function (failCount, suite) {

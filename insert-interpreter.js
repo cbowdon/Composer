@@ -6,6 +6,7 @@ exports.InsertInterpreter = (function InsertInterpreterClosure() {
 
     function InsertInterpreter(buffer) {
         this.buffer = buffer;
+        this.cursor = buffer.cursor;
     }
 
     InsertInterpreter.prototype.input = function (character) {
@@ -22,26 +23,26 @@ exports.InsertInterpreter = (function InsertInterpreterClosure() {
             return this.buffer.cut();
         }
         if (character === '<Backspace>') {
-            this.buffer.cursorLeft();
+            this.cursor.Left();
             return this.buffer.cut();
         }
         if (character === '<Left>') {
-            return this.buffer.cursorLeft();
+            return this.cursor.left();
         }
         if (character === '<Right>') {
-            return this.buffer.cursorRight();
+            return this.cursor.right();
         }
         if (character === '<Up>') {
-            return this.buffer.cursorUp();
+            return this.cursor.up();
         }
         if (character === '<Down>') {
-            return this.buffer.cursorDown();
+            return this.cursor.down();
         }
         if (character === '<C-e>') {
-            return base.cursorEOL(this.buffer);
+            return this.cursor.endOfLine();
         }
         if (character === '<C-a>') {
-            return base.cursorBOL(this.buffer);
+            return this.cursor.startOfLine();
         }
     };
 
