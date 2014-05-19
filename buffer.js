@@ -21,10 +21,6 @@ exports.Buffer = (function BufferClosure() {
         right: {
             get: function () { return this.index + 1; },
         },
-        virtualCol: {
-            value: 0,
-            writable: true,
-        },
         up: {
             get: function () {
                 var curLn   = this.line(this.index),
@@ -42,6 +38,11 @@ exports.Buffer = (function BufferClosure() {
 
                 return Math.min(nxtLn.start + col, nxtLn.end);
             },
+        },
+        // Column prior to any up/down movements
+        virtualCol: {
+            value: 0,
+            writable: true,
         },
         // Start/end of buffer
         start: {

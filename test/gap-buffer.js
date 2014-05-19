@@ -59,6 +59,9 @@ exports.tests = [
         assert.strictEqual(gapBuffer.cursorForward().value, 'o', 7);
         assert.deepEqual(gapBuffer.cursorForward(), { done: true }, 8);
         assert.strictEqual(gapBuffer.cursorBack().value, 'o', 9);
+        assert.strictEqual(gapBuffer.cursorBack(1).value, 'l', 10);
+        assert.strictEqual(gapBuffer.cursorBack(2).value, 'e', 11);
+        assert.strictEqual(gapBuffer.cursorForward(3).value, 'o', 12);
     },
 
     function GapBuffer_index() {

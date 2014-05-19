@@ -48,7 +48,6 @@ exports.Cursor = (function CursorClosure() {
         return this.toIndex(this.b.endOfLine);
     };
 
-
     Cursor.prototype.up = function () {
         return this.toIndex(this.b.up);
     };
