@@ -23,7 +23,7 @@ exports.InsertInterpreter = (function InsertInterpreterClosure() {
             return this.buffer.cut();
         }
         if (character === '<Backspace>') {
-            this.cursor.Left();
+            this.cursor.left();
             return this.buffer.cut();
         }
         if (character === '<Left>') {
