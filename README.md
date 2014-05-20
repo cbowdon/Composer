@@ -17,9 +17,10 @@ The idea is to make an editor that:
 - Immutable data and functional approach to be default: OO and mutable state to be wheeled out when beneficial.
 - "Make it work, then make it good." (Refactor later, explore the problem first.)
 - ES5, no messing around with TypeScript today.
+- Firefox support only. Add proper cross-browser support later.
 
 ### Roadmap
-Agile - release a turd, then polish. Paraphrasing slightly.
+MVP etc. etc.
 
 * v0.0.x
 - Insert mode.
@@ -31,12 +32,19 @@ Agile - release a turd, then polish. Paraphrasing slightly.
 * v0.2.x
 - Adds normal mode operators like change and delete.
 - Adds undo.
+- Adds copy-paste.
 
 * v0.3.x
 - Adds command mode.
 
 * v0.4.x
 - Adds multiple buffers.
+
+* v0.5.x
+- Evil: adds (optional) JS eval mode
+
+* v0.6.x
+- Support for other browsers.
 
 ### Architecture
 
