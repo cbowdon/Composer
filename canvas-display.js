@@ -9,7 +9,7 @@ exports.CanvasDisplay = (function CanvasDisplayClosure() {
 
     function buildContext(it, rows, cols, cellSize) {
 
-        $('document').ready(function () {
+        $(function () {
             var $canvas = $('<canvas>HTML5 Canvas not supported by your browser!</canvas>')
                 .attr('width', rows * cellSize)
                 .attr('height', cols * cellSize);

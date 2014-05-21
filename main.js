@@ -1,4 +1,4 @@
-/*jslint node: true, browser: true */
+/*jslint node: true */
 'use strict';
 
 var $               = require('jquery'),
@@ -8,7 +8,7 @@ var $               = require('jquery'),
 
 var test = "Hello,\nworld,\n\nhow's it going?\nAll's well,\nI trust.";
 
-$(function Main() {
+(function Main() {
     var keyHandler  = new KeyHandler(),
         display     = new CanvasDisplay(100, 80),
         composer    = new Composer(test);
@@ -27,4 +27,7 @@ $(function Main() {
         display.redisplay(bufferEvent);
     });
 
-});
+    $(function () {
+        display.redisplay(composer.buffer);
+    });
+}());
