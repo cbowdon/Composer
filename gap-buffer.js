@@ -90,8 +90,13 @@ exports.GapBuffer = (function GapBufferClosure() {
     }
 
     function cut(before, after) {
-        var result = after.pop();
-        return result;
+        if (before.length === 0) {
+            return undefined;
+        }
+        if (after.length === 0) {
+            return before.pop();
+        }
+        return after.pop();
     }
 
     function insert(before, after, character) {

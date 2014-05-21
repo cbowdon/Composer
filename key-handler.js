@@ -30,10 +30,10 @@ exports.KeyHandler = (function KeyHandlerClosure() {
         return character;
     }
 
-    function KeyHandler(document) {
+    function KeyHandler() {
         var that = this;
 
-        $(document).keypress(function (keyEvent) {
+        $('body').keypress(function (keyEvent) {
             var character = convert(keyEvent);
             //console.log(character, keyEvent.key, keyEvent.charCode, keyEvent);
             if (!keyEvent.metaKey) {

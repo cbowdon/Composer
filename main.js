@@ -1,14 +1,15 @@
 /*jslint node: true, browser: true */
 'use strict';
 
-var KeyHandler  = require('./key-handler').KeyHandler,
-    CanvasDisplay  = require('./canvas-display').CanvasDisplay,
-    Composer    = require('./composer').Composer;
+var $               = require('jquery'),
+    KeyHandler      = require('./key-handler').KeyHandler,
+    CanvasDisplay   = require('./canvas-display').CanvasDisplay,
+    Composer        = require('./composer').Composer;
 
 var test = "Hello,\nworld,\n\nhow's it going?\nAll's well,\nI trust.";
 
-(function Main() {
-    var keyHandler  = new KeyHandler(document),
+$(function Main() {
+    var keyHandler  = new KeyHandler(),
         display     = new CanvasDisplay(100, 80),
         composer    = new Composer(test);
 
@@ -17,7 +18,7 @@ var test = "Hello,\nworld,\n\nhow's it going?\nAll's well,\nI trust.";
         composer.input(keyEvent);
     });
 
-    // subscribe visplay to buffer changes
+    // subscribe display to buffer changes
     composer.addEventListener('change', function (bufferEvent) {
         display.redisplay(bufferEvent);
     });
@@ -26,4 +27,4 @@ var test = "Hello,\nworld,\n\nhow's it going?\nAll's well,\nI trust.";
         display.redisplay(bufferEvent);
     });
 
-}());
+});
