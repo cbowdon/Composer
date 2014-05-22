@@ -2,7 +2,7 @@
 'use strict';
 
 var assert       = require('assert'),
-    BufferRouter = require('../buffer-router').BufferRouter;
+    BufferRouter = require('../router').BufferRouter;
 
 exports.tests = [
     function BufferRouter_add() {
