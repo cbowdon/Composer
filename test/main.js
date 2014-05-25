@@ -12,7 +12,7 @@ testSuites = [
     require('./lib-base'),
     require('./cursor'),
     require('./gap-buffer'),
-    require('./buffer-router'),
+    require('./router'),
 ];
 
 failCount = testSuites.reduce(function (failCount, suite) {

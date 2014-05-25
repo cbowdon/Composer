@@ -45,7 +45,9 @@ exports.GapBuffer = (function GapBufferClosure() {
     }
 
     function cursorForward(before, after, count) {
-        return repeat(count || 1, function () {
+        var n = count === 0 ? 0 : count || 1;
+
+        return repeat(n, function () {
             var movedChar = after.pop();
 
             if (movedChar) {
@@ -61,7 +63,9 @@ exports.GapBuffer = (function GapBufferClosure() {
     }
 
     function cursorBack(before, after, count) {
-        return repeat(count || 1, function () {
+        var n = count === 0 ? 0 : count || 1;
+
+        return repeat(n, function () {
             var movedChar = before.pop();
 
             if (movedChar) {

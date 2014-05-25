@@ -8,15 +8,19 @@ exports.Cursor = (function CursorClosure() {
     }
 
     Cursor.prototype.toIndex = function (index) {
+        var dist;
         if (index < 0 || index > this.b.length) {
             return undefined;
         }
-        while (this.b.index > index) {
-            this.b.cursorBack();
+
+        dist = index - this.b.index;
+
+        if (dist > 0) {
+            this.b.cursorForward(dist);
+        } else if (dist < 0) {
+            this.b.cursorBack(-dist);
         }
-        while (this.b.index < index) {
-            this.b.cursorForward();
-        }
+
         return this.current();
     };
 
