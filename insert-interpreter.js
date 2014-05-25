@@ -2,7 +2,6 @@
 'use strict';
 
 exports.InsertInterpreter = (function InsertInterpreterClosure() {
-    var base = require('./lib-base');
 
     function InsertInterpreter(buffer) {
         this.buffer = buffer;

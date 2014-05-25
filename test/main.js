@@ -13,6 +13,8 @@ testSuites = [
     require('./cursor'),
     require('./gap-buffer'),
     require('./router'),
+    require('./insert-interpreter'),
+    require('./normal-interpreter'),
 ];
 
 failCount = testSuites.reduce(function (failCount, suite) {
