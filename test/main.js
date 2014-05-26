@@ -12,6 +12,7 @@ testSuites = [
     require('./lib-base'),
     require('./cursor'),
     require('./gap-buffer'),
+    require('./writer'),
     require('./router'),
     require('./insert-interpreter'),
     require('./normal-interpreter'),
