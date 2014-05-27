@@ -85,6 +85,7 @@ exports.CanvasDisplay = (function CanvasDisplayClosure() {
     CanvasDisplay.prototype.drawCursor = function (x0, y0) {
         this.context.fillStyle = '#0A0';
         this.context.fillRect(x0, y0 - this.cellSize, 1, this.cellSize);
+        this.context.fillRect(x0, y0, this.cellSize / 3, 2);
     };
 
     return CanvasDisplay;
