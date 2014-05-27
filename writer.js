@@ -9,23 +9,24 @@ exports.Writer = (function WriterClosure() {
         this.future     = [];
     }
 
-    Writer.prototype.actions = {
-        cut: function (arg) {
-            var result = this.gapBuffer.cut(arg);
-            return { insert: result };
-        },
-        insert: function (arg) {
-            this.gapBuffer.insert(arg);
-            return { cut: arg.length };
-        },
-        back: function (arg) {
-            this.gapBuffer.back(arg);
-            return { forward: arg };
-        },
-        forward: function (arg) {
-            this.gapBuffer.forward(arg);
-            return { back: arg };
-        },
+    Writer.prototype.cut = function (arg) {
+        var result = this.gapBuffer.cut(arg);
+        return { insert: result };
+    };
+
+    Writer.prototype.insert = function (arg) {
+        this.gapBuffer.insert(arg);
+        return { cut: arg.length };
+    };
+
+    Writer.prototype.forward = function (arg) {
+        this.gapBuffer.cursorForward(arg);
+        return { back: arg };
+    };
+
+    Writer.prototype.back = function (arg) {
+        this.gapBuffer.cursorBack(arg);
+        return { forward: arg };
     };
 
     Writer.prototype.write = function (acts) {
@@ -42,7 +43,7 @@ exports.Writer = (function WriterClosure() {
             }
 
             result[key] = it[key];
-            result.undo = that.actions[key](it[key]);
+            result.undo = that[key](it[key]);
 
             return result;
         });

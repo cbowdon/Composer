@@ -40,18 +40,22 @@ exports.tests = [
     function GapBuffer_cut() {
         var gapBuffer = new GapBuffer('Hello, world');
 
-        assert.strictEqual(gapBuffer.cut(), undefined);
-        assert.strictEqual(gapBuffer.toString(), 'Hello, world');
+        assert.strictEqual(gapBuffer.cut(), 'H');
+        assert.strictEqual(gapBuffer.toString(), 'ello, world');
 
-        gapBuffer.cursorForward(3);
+        gapBuffer.cursorForward(2);
 
         assert.strictEqual(gapBuffer.cut(), 'l');
-        assert.strictEqual(gapBuffer.toString(), 'Helo, world');
+        assert.strictEqual(gapBuffer.toString(), 'elo, world');
 
-        gapBuffer.cursorForward(8);
+        gapBuffer.cursorForward(7);
 
         assert.strictEqual(gapBuffer.cut(), 'd');
-        assert.strictEqual(gapBuffer.toString(), 'Helo, worl');
+        assert.strictEqual(gapBuffer.toString(), 'elo, worl');
+
+        gapBuffer.cursorForward(1);
+        assert.strictEqual(gapBuffer.cut(), null);
+        assert.strictEqual(gapBuffer.toString(), 'elo, worl');
     },
 
     function GapBuffer_cursor() {
