@@ -1,10 +1,12 @@
 /*jslint node: true */
 'use strict';
 
+var GapBuffer = require('./gap-buffer').GapBuffer;
+
 exports.Writer = (function WriterClosure() {
 
-    function Writer(gapBuffer) {
-        this.gapBuffer  = gapBuffer;
+    function Writer(text) {
+        this.gapBuffer  = new GapBuffer(text);
         this.history    = [];
         this.future     = [];
     }
@@ -54,13 +56,14 @@ exports.Writer = (function WriterClosure() {
     };
 
     Writer.prototype.undo = function () {
-        var result = this.history.pop();
-        this.future.push(result.undo());
+        var actions = this.history.pop();
+
+        this.write(actions.map(function (act) {
+            return act.undo;
+        }));
     };
 
     Writer.prototype.redo = function () {
-        var result = this.future.pop();
-        this.history.push(result.undo());
     };
 
     return Writer;

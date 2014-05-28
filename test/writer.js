@@ -1,95 +1,91 @@
 /*jslint node: true */
 'use strict';
 
-var assert      = require('assert'),
-    Writer      = require('../writer').Writer,
-    GapBuffer   = require('../gap-buffer').GapBuffer;
+var assert = require('assert'),
+    Writer = require('../writer').Writer;
 
 exports.tests = [
     function Writer_write() {
         var changeXToT, history, writer, gapBuffer;
 
-        gapBuffer = new GapBuffer('x');
+        writer = new Writer('x');
 
-        writer = new Writer(gapBuffer);
+        writer.write([
+            { cut: 1 },
+            { insert: 't' },
+            { back: 1 },
+        ]);
 
-        changeXToT = [
-            { cut:      1   },
-            { insert:   't' },
-            { back:     1   },
-        ];
+        assert.strictEqual(writer.gapBuffer.toString(), 't');
 
-        history = [
-            [
-                { cut:      1,      undo: {     insert:     'x' } },
-                { insert:   't',    undo: {     cut:        1   } },
-                { back:     1,      undo: {     forward:    1   } },
-            ]
-        ];
+        writer.write([
+            { forward: 3 },
+            { insert: 'ing' },
+            { back: 3 },
+        ]);
 
-        writer.write(changeXToT);
-
-        assert.strictEqual(gapBuffer.toString(), 't');
-        assert.deepEqual(writer.history, history);
-        assert.deepEqual(writer.future, []);
+        assert.strictEqual(writer.gapBuffer.toString(), 'ting');
     },
 
     function Writer_undo() {
         var changeXToT, history, future, writer, gapBuffer;
 
-        gapBuffer = new GapBuffer('x');
+        writer = new Writer('x');
 
-        writer = new Writer(gapBuffer);
+        writer.write([
+            { cut: 1 },
+            { insert: 't' },
+            { back: 1 },
+        ]);
 
-        changeXToT = [
-            { cut:      1   },
-            { insert:   't' },
-            { back:     1   },
-        ];
-
-        history = [
-            [
-                { cut:      1,      undo: {     insert:     'x' } },
-                { insert:   't',    undo: {     cut:        1   } },
-                { back:     1,      undo: {     forward:    1   } },
-            ]
-        ];
-
-        writer.write(changeXToT);
         writer.undo();
 
-        assert.strictEqual(gapBuffer.toString(), 'x');
-        assert.deepEqual(writer.history, []);
-        assert.deepEqual(writer.future, history);
+        assert.strictEqual(writer.gapBuffer.toString(), 'x', 'Basic undo');
+
+        writer.write([
+            { forward: 1 },
+            { insert: 'ing' },
+            { back: 3 },
+        ]);
+
+        writer.undo();
+
+        assert.strictEqual(writer.gapBuffer.toString(), 'x', 'New undo');
+
+        writer.write([
+            { insert: 'fo' },
+            { back: 2 },
+        ]);
+
+        writer.write([ { insert: 'fire' } ]);
+
+        writer.undo();
+
+        assert.strictEqual(writer.gapBuffer.toString(), 'fox', 'Undo single');
+
+        writer.undo();
+
+        assert.strictEqual(writer.gapBuffer.toString(), 'x', 'Undo multiple');
+
+        writer.undo();
+
+        assert.strictEqual(writer.gapBuffer.toString(), 'x', 'Nothing to undo');
     },
 
     function Writer_redo() {
         var changeXToT, history, future, writer, gapBuffer;
 
-        gapBuffer = new GapBuffer('x');
+        writer = new Writer('x');
 
-        writer = new Writer(gapBuffer);
-
-        changeXToT = [
+        writer.write([
             { cut:      1   },
             { insert:   't' },
             { back:     1   },
-        ];
+        ]);
 
-        future = [
-            [
-                { cut:      1,      undo: {     insert:     'x' } },
-                { insert:   't',    undo: {     cut:        1   } },
-                { back:     1,      undo: {     forward:    1   } },
-            ]
-        ];
-
-        writer.write(changeXToT);
         writer.undo();
         writer.redo();
 
-        assert.strictEqual(gapBuffer.toString(), 't');
-        assert.deepEqual(writer.history, history);
-        assert.deepEqual(writer.future, []);
+        assert.strictEqual(writer.gapBuffer.toString(), 't');
     },
 ];
