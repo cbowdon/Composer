@@ -28,13 +28,16 @@ exports.tests = [
     function Writer_undo() {
         var writer = new Writer('x');
 
+        console.log('###########################');
         writer.write([
             { cut: 1 },
             { insert: 't' },
             { back: 1 },
         ]);
+        console.log('###########################');
 
         writer.undo();
+        console.log('###########################');
 
         assert.strictEqual(writer.gapBuffer.toString(), 'x', 'Basic undo');
 

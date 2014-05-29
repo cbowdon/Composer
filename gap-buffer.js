@@ -48,15 +48,12 @@ exports.GapBuffer = (function GapBufferClosure() {
         var n = count === 0 ? 0 : count || 1;
 
         return repeat(n, function () {
-            var movedChar = after.pop();
-
-            if (movedChar) {
-                before.push(movedChar);
-            }
 
             if (after.length === 0) {
                 return { success: false };
             }
+
+            before.push(after.pop());
 
             return cursorCurrent(before, after);
         }).pop();
@@ -66,15 +63,12 @@ exports.GapBuffer = (function GapBufferClosure() {
         var n = count === 0 ? 0 : count || 1;
 
         return repeat(n, function () {
-            var movedChar = before.pop();
-
-            if (movedChar) {
-                after.push(movedChar);
-            }
 
             if (before.length === 0) {
                 return { success: false };
             }
+
+            after.push(before.pop());
 
             return cursorCurrent(before, after);
         }).pop();
@@ -186,7 +180,7 @@ exports.GapBuffer = (function GapBufferClosure() {
 
             }
             this.fireListeners('change', this);
-            return this;
+            return { success: true };
         };
 
         this.update = function (character) {

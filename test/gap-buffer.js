@@ -11,12 +11,11 @@ exports.tests = [
 
         assert.strictEqual(gapBuffer.toString(), ', world');
 
-        gapBuffer
-            .insert('H')
-            .insert('e')
-            .insert('l')
-            .insert('l')
-            .insert('o');
+        gapBuffer.insert('H');
+        gapBuffer.insert('e');
+        gapBuffer.insert('l');
+        gapBuffer.insert('l');
+        gapBuffer.insert('o');
 
         assert.strictEqual(gapBuffer.toString(), 'Hello, world');
 

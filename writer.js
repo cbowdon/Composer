@@ -13,22 +13,38 @@ exports.Writer = (function WriterClosure() {
 
     Writer.prototype.cut = function (arg) {
         var result = this.gapBuffer.cut(arg);
-        return { insert: result };
+        if (result.success) {
+            return { insert: result.value };
+        }
+        return { noop: 'nothing to undo' };
     };
 
     Writer.prototype.insert = function (arg) {
-        this.gapBuffer.insert(arg);
-        return { cut: arg.length };
+        var result = this.gapBuffer.insert(arg);
+        if (result.success) {
+            return { cut: arg.length };
+        }
+        return { noop: 'nothing to undo' };
     };
 
     Writer.prototype.forward = function (arg) {
-        this.gapBuffer.cursorForward(arg);
-        return { back: arg };
+        var result = this.gapBuffer.cursorForward(arg);
+        if (result.success) {
+            return { back: arg };
+        }
+        return { noop: 'nothing to undo' };
     };
 
     Writer.prototype.back = function (arg) {
-        this.gapBuffer.cursorBack(arg);
-        return { forward: arg };
+        var result = this.gapBuffer.cursorBack(arg);
+        if (result.success) {
+            return { forward: arg };
+        }
+        return { noop: 'nothing to undo' };
+    };
+
+    Writer.prototype.noop = function () {
+        return { noop: 'nothing to undo' };
     };
 
     Writer.prototype.write = function (acts) {
@@ -47,14 +63,11 @@ exports.Writer = (function WriterClosure() {
             result[key] = it[key];
             result.undo = that[key](it[key]);
 
-            /*
             console.log({
-                act: it,
                 result: result,
                 state: that.gapBuffer.toString(),
                 index: that.gapBuffer.index,
             });
-            */
 
             return result;
         });
