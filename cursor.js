@@ -10,7 +10,7 @@ exports.Cursor = (function CursorClosure() {
     Cursor.prototype.toIndex = function (index) {
         var dist;
         if (index < 0 || index > this.b.length) {
-            return undefined;
+            return { success: false };
         }
 
         dist = index - this.b.index;

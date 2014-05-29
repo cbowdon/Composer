@@ -35,9 +35,9 @@ exports.GapBuffer = (function GapBufferClosure() {
 
     function cursorCurrent(before, after) {
         if (after.length === 0) {
-            return { done: true };
+            return { success: false };
         }
-        return { done: false, value: after[after.length - 1] };
+        return { success: true, value: after[after.length - 1] };
     }
 
     function cursorPosition(before, after) {
@@ -55,7 +55,7 @@ exports.GapBuffer = (function GapBufferClosure() {
             }
 
             if (after.length === 0) {
-                return { done: true };
+                return { success: false };
             }
 
             return cursorCurrent(before, after);
@@ -73,7 +73,7 @@ exports.GapBuffer = (function GapBufferClosure() {
             }
 
             if (before.length === 0) {
-                return { done: true };
+                return { success: false };
             }
 
             return cursorCurrent(before, after);
@@ -94,7 +94,9 @@ exports.GapBuffer = (function GapBufferClosure() {
     }
 
     function cut(before, after) {
-        return after.length === 0 ? null : after.pop();
+        return after.length === 0 ?
+                { success: false } :
+                { success: true, value: after.pop() };
     }
 
     function insert(before, after, character) {
@@ -156,14 +158,6 @@ exports.GapBuffer = (function GapBufferClosure() {
             var result = cursorBack(before, after, count);
             this.fireListeners('cursor', this);
             return result;
-        };
-
-        this.cursorRow = function () {
-            return cursorRow(before, after);
-        };
-
-        this.cursorCol = function () {
-            return cursorCol(before, after);
         };
 
         this.cut = function () {

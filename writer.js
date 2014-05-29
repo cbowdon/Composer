@@ -47,6 +47,15 @@ exports.Writer = (function WriterClosure() {
             result[key] = it[key];
             result.undo = that[key](it[key]);
 
+            /*
+            console.log({
+                act: it,
+                result: result,
+                state: that.gapBuffer.toString(),
+                index: that.gapBuffer.index,
+            });
+            */
+
             return result;
         });
 
@@ -56,11 +65,17 @@ exports.Writer = (function WriterClosure() {
     };
 
     Writer.prototype.undo = function () {
-        var actions = this.history.pop();
+        var dos, undos;
 
-        this.write(actions.map(function (act) {
-            return act.undo;
-        }));
+        dos = this.history.pop();
+
+        undos = dos.map(function (act) { return act.undo; });
+
+        undos.reverse();
+
+        console.log('undos', undos);
+
+        this.write(undos);
     };
 
     Writer.prototype.redo = function () {

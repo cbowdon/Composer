@@ -21,13 +21,13 @@ exports.tests = [
         assert.strictEqual(cursor.toIndex(2).value, 'l');
         assert.strictEqual(buffer.index, 2);
 
-        assert.strictEqual(cursor.toIndex(-1), undefined);
+        assert.deepEqual(cursor.toIndex(-1), { success: false });
         assert.strictEqual(buffer.index, 2);
 
-        assert.strictEqual(cursor.toIndex(6), undefined);
+        assert.deepEqual(cursor.toIndex(6), { success: false });
         assert.strictEqual(buffer.index, 2);
 
-        assert.deepEqual(cursor.toIndex(5), { done: true });
+        assert.deepEqual(cursor.toIndex(5), { success: false });
         assert.strictEqual(buffer.index, 5);
     },
 
@@ -37,7 +37,7 @@ exports.tests = [
 
         cursor.right(3);
 
-        assert.deepEqual(cursor.start(), { value: 'H', done: false });
+        assert.deepEqual(cursor.start(), { value: 'H', success: true });
     },
 
     function Cursor_end() {
@@ -46,7 +46,7 @@ exports.tests = [
 
         cursor.right(3);
 
-        assert.deepEqual(cursor.end(), { done: true });
+        assert.deepEqual(cursor.end(), { success: false });
     },
 
     function Cursor_down() {
@@ -55,18 +55,18 @@ exports.tests = [
             cursor = buffer.cursor;
 
         cursor.right();
-        assert.deepEqual(cursor.current(), { value: 'e', done: false }, 'line 0 col 1');
+        assert.deepEqual(cursor.current(), { value: 'e', success: true }, 'line 0 col 1');
 
-        assert.deepEqual(cursor.down(), { done: false, value: 'o' }, 'line 1 col 1');
+        assert.deepEqual(cursor.down(), { success: true, value: 'o' }, 'line 1 col 1');
         assert.strictEqual(buffer.index, 9);
 
-        assert.deepEqual(cursor.down(), { done: false, value: '\n' }, 'line 2 col 0');
+        assert.deepEqual(cursor.down(), { success: true, value: '\n' }, 'line 2 col 0');
         assert.strictEqual(buffer.index, 15);
 
-        assert.deepEqual(cursor.down(), { done: false, value: 's' }, 'line 3 col 1');
+        assert.deepEqual(cursor.down(), { success: true, value: 's' }, 'line 3 col 1');
         assert.strictEqual(buffer.index, 17);
 
-        assert.deepEqual(cursor.down(), { done: false, value: 's' }, 'line 3 (no movement)');
+        assert.deepEqual(cursor.down(), { success: true, value: 's' }, 'line 3 (no movement)');
         assert.strictEqual(buffer.index, 17);
     },
 
@@ -78,12 +78,12 @@ exports.tests = [
         cursor.end();
         cursor.left(4);
 
-        assert.deepEqual(cursor.current(), { value: 'e', done: false }, 'line 4 col 5');
-        assert.deepEqual(cursor.up(), { value: '\n', done: false }, 'line 3 col 2');
-        assert.deepEqual(cursor.up(), { value: '\n', done: false }, 'line 2 col 0');
-        assert.deepEqual(cursor.up(), { value: '.', done: false }, 'line 1 col 5');
-        assert.deepEqual(cursor.up(), { value: ',', done: false }, 'line 0 col 5');
-        assert.deepEqual(cursor.up(), { value: ',', done: false }, 'line 0 (no movement)');
+        assert.deepEqual(cursor.current(), { value: 'e', success: true }, 'line 4 col 5');
+        assert.deepEqual(cursor.up(), { value: '\n', success: true }, 'line 3 col 2');
+        assert.deepEqual(cursor.up(), { value: '\n', success: true }, 'line 2 col 0');
+        assert.deepEqual(cursor.up(), { value: '.', success: true }, 'line 1 col 5');
+        assert.deepEqual(cursor.up(), { value: ',', success: true }, 'line 0 col 5');
+        assert.deepEqual(cursor.up(), { value: ',', success: true }, 'line 0 (no movement)');
     },
 
     function Cursor_down_when_inserting() {
@@ -106,7 +106,7 @@ exports.tests = [
         var buffer = new Buffer('Hello'),
             cursor  = buffer.cursor;
 
-        assert.deepEqual(cursor.current(), { value: 'H', done: false }, 0);
+        assert.deepEqual(cursor.current(), { value: 'H', success: true }, 0);
         assert.strictEqual(cursor.right().value, 'e', 1);
         assert.strictEqual(cursor.peek(), 'l', 2);
     },

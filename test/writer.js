@@ -6,9 +6,7 @@ var assert = require('assert'),
 
 exports.tests = [
     function Writer_write() {
-        var changeXToT, history, writer, gapBuffer;
-
-        writer = new Writer('x');
+        var writer = new Writer('x');
 
         writer.write([
             { cut: 1 },
@@ -28,9 +26,7 @@ exports.tests = [
     },
 
     function Writer_undo() {
-        var changeXToT, history, future, writer, gapBuffer;
-
-        writer = new Writer('x');
+        var writer = new Writer('x');
 
         writer.write([
             { cut: 1 },
@@ -73,9 +69,7 @@ exports.tests = [
     },
 
     function Writer_redo() {
-        var changeXToT, history, future, writer, gapBuffer;
-
-        writer = new Writer('x');
+        var writer = new Writer('x');
 
         writer.write([
             { cut:      1   },

@@ -33,43 +33,43 @@ exports.tests = [
         gapBuffer.cursorForward();
         gapBuffer.update('u');
 
-        assert.deepEqual(gapBuffer.cursorCurrent(), { value: 'u', done: false });
+        assert.deepEqual(gapBuffer.cursorCurrent(), { value: 'u', success: true });
         assert.strictEqual(gapBuffer.toString(), 'Hullo, world');
     },
 
     function GapBuffer_cut() {
         var gapBuffer = new GapBuffer('Hello, world');
 
-        assert.strictEqual(gapBuffer.cut(), 'H');
+        assert.deepEqual(gapBuffer.cut(), { success: true, value: 'H' });
         assert.strictEqual(gapBuffer.toString(), 'ello, world');
 
         gapBuffer.cursorForward(2);
 
-        assert.strictEqual(gapBuffer.cut(), 'l');
+        assert.deepEqual(gapBuffer.cut(), { success: true, value: 'l' });
         assert.strictEqual(gapBuffer.toString(), 'elo, world');
 
         gapBuffer.cursorForward(7);
 
-        assert.strictEqual(gapBuffer.cut(), 'd');
+        assert.deepEqual(gapBuffer.cut(), { success: true, value: 'd' });
         assert.strictEqual(gapBuffer.toString(), 'elo, worl');
 
         gapBuffer.cursorForward(1);
-        assert.strictEqual(gapBuffer.cut(), null);
+        assert.deepEqual(gapBuffer.cut(), { success: false });
         assert.strictEqual(gapBuffer.toString(), 'elo, worl');
     },
 
     function GapBuffer_cursor() {
         var gapBuffer = new GapBuffer('Hello');
 
-        assert.deepEqual(gapBuffer.cursorCurrent(), { value: 'H', done: false }, 0);
-        assert.deepEqual(gapBuffer.cursorBack(), { done: true }, 1);
+        assert.deepEqual(gapBuffer.cursorCurrent(), { value: 'H', success: true }, 0);
+        assert.deepEqual(gapBuffer.cursorBack(), { success: false }, 1);
         assert.strictEqual(gapBuffer.cursorForward().value, 'e', 2);
         assert.strictEqual(gapBuffer.cursorForward().value, 'l', 3);
         assert.strictEqual(gapBuffer.cursorBack().value, 'e', 4);
         assert.strictEqual(gapBuffer.cursorForward().value, 'l', 5);
         assert.strictEqual(gapBuffer.cursorForward().value, 'l', 6);
         assert.strictEqual(gapBuffer.cursorForward().value, 'o', 7);
-        assert.deepEqual(gapBuffer.cursorForward(), { done: true }, 8);
+        assert.deepEqual(gapBuffer.cursorForward(), { success: false }, 8);
         assert.strictEqual(gapBuffer.cursorBack().value, 'o', 9);
         assert.strictEqual(gapBuffer.cursorBack(1).value, 'l', 10);
         assert.strictEqual(gapBuffer.cursorBack(2).value, 'e', 11);
@@ -104,48 +104,48 @@ exports.tests = [
         assert.strictEqual(gapBuffer.index, 0);
     },
 
-    function GapBuffer_cursorRow() {
+    function GapBuffer_row() {
         var text = "Hello, \nworld!\nIs it me you're looking for?",
             gapBuffer = new GapBuffer(text);
 
-        assert.strictEqual(gapBuffer.cursorRow(), 0, 'line 0');
+        assert.strictEqual(gapBuffer.row, 0, 'line 0');
 
         gapBuffer.cursorForward(7);
-        assert.strictEqual(gapBuffer.cursorRow(), 0, 'line 0');
+        assert.strictEqual(gapBuffer.row, 0, 'line 0');
 
         gapBuffer.cursorForward(1);
-        assert.strictEqual(gapBuffer.cursorRow(), 1, 'line 1');
+        assert.strictEqual(gapBuffer.row, 1, 'line 1');
 
         gapBuffer.cursorBack(1);
-        assert.strictEqual(gapBuffer.cursorRow(), 0, 'line 0');
+        assert.strictEqual(gapBuffer.row, 0, 'line 0');
 
         gapBuffer.cursorForward(20);
-        assert.strictEqual(gapBuffer.cursorRow(), 2, 'line 2');
+        assert.strictEqual(gapBuffer.row, 2, 'line 2');
     },
 
-    function GapBuffer_cursorCol() {
+    function GapBuffer_col() {
         var text = "Hello, \nworld!\nIs it me you're looking for?",
             gapBuffer = new GapBuffer(text);
 
-        assert.strictEqual(gapBuffer.cursorCol(), 0, 'line 0');
+        assert.strictEqual(gapBuffer.col, 0, 'line 0');
 
         gapBuffer.cursorForward(3);
-        assert.strictEqual(gapBuffer.cursorCol(), 3, 'line 0');
+        assert.strictEqual(gapBuffer.col, 3, 'line 0');
 
         gapBuffer.cursorForward(4);
-        assert.strictEqual(gapBuffer.cursorCol(), 7, 'line 0');
+        assert.strictEqual(gapBuffer.col, 7, 'line 0');
 
         gapBuffer.cursorForward(1);
-        assert.strictEqual(gapBuffer.cursorCol(), 0, 'line 1');
+        assert.strictEqual(gapBuffer.col, 0, 'line 1');
 
         gapBuffer.cursorForward(7);
-        assert.strictEqual(gapBuffer.cursorCol(), 0, 'line 1');
+        assert.strictEqual(gapBuffer.col, 0, 'line 1');
 
         gapBuffer.cursorBack(1);
-        assert.strictEqual(gapBuffer.cursorCol(), 6, 'line 1');
+        assert.strictEqual(gapBuffer.col, 6, 'line 1');
 
         gapBuffer.cursorForward(29);
-        assert.strictEqual(gapBuffer.cursorCol(), 28, 'line 2 (end of buffer)');
+        assert.strictEqual(gapBuffer.col, 28, 'line 2 (end of buffer)');
     },
 
     function GapBuffer_load() {
