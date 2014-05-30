@@ -49,8 +49,9 @@ exports.GapBuffer = (function GapBufferClosure() {
 
         return repeat(n, function () {
 
-            if (after.length === 0) {
-                return { success: false };
+            if (after.length === 1) {
+                return { success: true, value: null };
+                // but don't actually pop the null terminator
             }
 
             before.push(after.pop());
@@ -88,7 +89,7 @@ exports.GapBuffer = (function GapBufferClosure() {
     }
 
     function cut(before, after) {
-        return after.length === 0 ?
+        return after.length === 1 ?
                 { success: false } :
                 { success: true, value: after.pop() };
     }
@@ -114,19 +115,19 @@ exports.GapBuffer = (function GapBufferClosure() {
         // The 'after' stack is reversed,
         // for O(1) insertion at the front.
         var before  = [],
-            after   = [];
+            after   = [null];
 
         Object.defineProperties(this, publisher);
 
         Object.defineProperties(this, {
-            length: { get: function () { return before.length + after.length; } },
+            length: { get: function () { return before.length + after.length - 1; } },
             index: { get: function () { return cursorPosition(before, after); } },
             row: { get: function () { return cursorRow(before, after); } },
             col: { get: function () { return cursorCol(before, after); } },
         });
 
         this.load = function (text) {
-            after = text.split('').reverse();
+            after = text.split('').concat([null]).reverse();
             this.fireListeners('change', this);
         };
 

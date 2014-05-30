@@ -61,18 +61,28 @@ exports.tests = [
         var gapBuffer = new GapBuffer('Hello');
 
         assert.deepEqual(gapBuffer.cursorCurrent(), { value: 'H', success: true }, 0);
+
         assert.deepEqual(gapBuffer.cursorBack(), { success: false }, 1);
+
         assert.strictEqual(gapBuffer.cursorForward().value, 'e', 2);
         assert.strictEqual(gapBuffer.cursorForward().value, 'l', 3);
+
         assert.strictEqual(gapBuffer.cursorBack().value, 'e', 4);
+
         assert.strictEqual(gapBuffer.cursorForward().value, 'l', 5);
         assert.strictEqual(gapBuffer.cursorForward().value, 'l', 6);
         assert.strictEqual(gapBuffer.cursorForward().value, 'o', 7);
-        assert.deepEqual(gapBuffer.cursorForward(), { success: false }, 8);
-        assert.strictEqual(gapBuffer.cursorBack().value, 'o', 9);
-        assert.strictEqual(gapBuffer.cursorBack(1).value, 'l', 10);
-        assert.strictEqual(gapBuffer.cursorBack(2).value, 'e', 11);
-        assert.strictEqual(gapBuffer.cursorForward(3).value, 'o', 12);
+
+        assert.deepEqual(gapBuffer.cursorForward(), { value: null, success: true }, 8);
+
+        //TODO trying to move past null term should explicitly fail
+        //assert.deepEqual(gapBuffer.cursorForward(), { success: false }, 9);
+
+        assert.strictEqual(gapBuffer.cursorBack().value, 'o', 10);
+        assert.strictEqual(gapBuffer.cursorBack(1).value, 'l', 11);
+        assert.strictEqual(gapBuffer.cursorBack(2).value, 'e', 12);
+
+        assert.strictEqual(gapBuffer.cursorForward(3).value, 'o', 13);
     },
 
     function GapBuffer_index() {
@@ -80,26 +90,26 @@ exports.tests = [
 
         assert.strictEqual(gapBuffer.index, 0);
 
-        gapBuffer.cursorForward();
+        gapBuffer.cursorForward(1);
         assert.strictEqual(gapBuffer.index, 1);
         gapBuffer.cursorForward(1);
         assert.strictEqual(gapBuffer.index, 2);
 
-        gapBuffer.cursorForward(3);
+        gapBuffer.cursorForward(4);
         assert.strictEqual(gapBuffer.index, 5);
 
-        gapBuffer.cursorForward();
+        gapBuffer.cursorForward(1);
         assert.strictEqual(gapBuffer.index, 5);
 
-        gapBuffer.cursorBack();
+        gapBuffer.cursorBack(1);
         assert.strictEqual(gapBuffer.index, 4);
-        gapBuffer.cursorBack();
+        gapBuffer.cursorBack(1);
         assert.strictEqual(gapBuffer.index, 3);
 
         gapBuffer.cursorBack(3);
         assert.strictEqual(gapBuffer.index, 0);
 
-        gapBuffer.cursorBack();
+        gapBuffer.cursorBack(1);
         assert.strictEqual(gapBuffer.index, 0);
     },
 
@@ -170,29 +180,25 @@ exports.tests = [
             index;
 
         assert.strictEqual(gapBuffer.charAt(-1), undefined, "at start: " + -1);
-        assert.strictEqual(gapBuffer.charAt(text.length), undefined, "at start: " + text.length);
+        assert.strictEqual(gapBuffer.charAt(text.length), null, "at start: " + text.length);
 
         for (index = 0; index < text.length; index += 1) {
             assert.strictEqual(gapBuffer.charAt(index), text[index], "at start: " + index);
         }
 
-        gapBuffer.cursorForward();
-        gapBuffer.cursorForward();
-        gapBuffer.cursorForward();
+        gapBuffer.cursorForward(3);
 
         assert.strictEqual(gapBuffer.charAt(-1), undefined, "moved 3: " + -1);
-        assert.strictEqual(gapBuffer.charAt(text.length), undefined, "moved 3: " + text.length);
+        assert.strictEqual(gapBuffer.charAt(text.length), null, "moved 3: " + text.length);
 
         for (index = 0; index < text.length; index += 1) {
             assert.strictEqual(gapBuffer.charAt(index), text[index], "moved 3: " + index);
         }
 
-        gapBuffer.cursorForward();
-        gapBuffer.cursorForward();
-        gapBuffer.cursorForward();
+        gapBuffer.cursorForward(3);
 
         assert.strictEqual(gapBuffer.charAt(-1), undefined, "at end: " + -1);
-        assert.strictEqual(gapBuffer.charAt(text.length), undefined, "at end: " + text.length);
+        assert.strictEqual(gapBuffer.charAt(text.length), null, "at end: " + text.length);
 
         for (index = 0; index < text.length; index += 1) {
             assert.strictEqual(gapBuffer.charAt(index), text[index], "at end: " + index);

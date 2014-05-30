@@ -44,7 +44,7 @@ exports.tests = [
         lines = base.lines(buffer);
 
         assert.deepEqual(lines[2][29], {
-            character: undefined,
+            character: null,
             index: text.length,
             cursor: true,
         });

@@ -27,7 +27,7 @@ exports.tests = [
         assert.deepEqual(cursor.toIndex(6), { success: false });
         assert.strictEqual(buffer.index, 2);
 
-        assert.deepEqual(cursor.toIndex(5), { success: false });
+        assert.deepEqual(cursor.toIndex(5), { success: true, value: null });
         assert.strictEqual(buffer.index, 5);
     },
 
@@ -46,7 +46,7 @@ exports.tests = [
 
         cursor.right(3);
 
-        assert.deepEqual(cursor.end(), { success: false });
+        assert.deepEqual(cursor.end(), { success: true, value: null });
     },
 
     function Cursor_down() {
