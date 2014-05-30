@@ -65,6 +65,11 @@ exports.CanvasDisplay = (function CanvasDisplayClosure() {
                     this.drawCursor(x0, y0);
                 }
 
+                // For debugging purposes, draw the null terminator as a tilde
+                if (result.character === null) {
+                    this.drawChar(x0, y0, '~');
+                }
+
                 if (result.character) {
                     this.drawChar(x0, y0, result.character);
                 }
