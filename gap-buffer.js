@@ -88,6 +88,12 @@ exports.GapBuffer = (function GapBufferClosure() {
                 before.length - lastNL - 1;
     }
 
+    function del(before, after) {
+        return before.length === 0 ?
+                { success: false } :
+                { success: true, value: before.pop() };
+    }
+
     function cut(before, after) {
         return after.length === 1 ?
                 { success: false } :
@@ -96,6 +102,10 @@ exports.GapBuffer = (function GapBufferClosure() {
 
     function insert(before, after, character) {
         before.push(character);
+    }
+
+    function append(before, after, character) {
+        after.push(character);
     }
 
     function update(before, after, character) {
@@ -182,6 +192,19 @@ exports.GapBuffer = (function GapBufferClosure() {
             }
             this.fireListeners('change', this);
             return { success: true };
+        };
+
+        this.delete = function () {
+            var result = del(before, after);
+            this.fireListeners('change', this);
+            return result;
+        };
+
+        this.append = function (character) {
+            if (!isSingleChar(character)) {
+                return { success: false };
+            }
+            return append(before, after, character);
         };
 
         this.update = function (character) {

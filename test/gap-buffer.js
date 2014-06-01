@@ -57,6 +57,26 @@ exports.tests = [
         assert.strictEqual(gapBuffer.toString(), 'elo, worl');
     },
 
+    function GapBuffer_append() {
+        var gapBuffer = new GapBuffer('Hello');
+
+        gapBuffer.append('!');
+        assert.strictEqual(gapBuffer.toString(), 'H!ello');
+
+        gapBuffer.append('?');
+        throw new Error("I'm not sure about this");
+        //assert.strictEqual(gapBuffer.toString(), 'H?!ello');
+    },
+
+    function GapBuffer_delete() {
+        var text = 'Hello',
+            gapBuffer = new GapBuffer(text);
+
+        assert.deepEqual(gapBuffer.delete(), { success: false }, 'Cursor at 0');
+
+        throw new Error('not finished');
+    },
+
     function GapBuffer_cursor() {
         var gapBuffer = new GapBuffer('Hello');
 

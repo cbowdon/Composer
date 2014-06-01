@@ -11,6 +11,10 @@ exports.Writer = (function WriterClosure() {
         this.future     = [];
     }
 
+    Writer.prototype.append = function (arg) {
+        throw new Error();
+    };
+
     Writer.prototype.cut = function (arg) {
         var result = this.gapBuffer.cut(arg);
         if (result.success) {
@@ -25,6 +29,10 @@ exports.Writer = (function WriterClosure() {
             return { cut: arg.length };
         }
         return { noop: 'nothing to undo' };
+    };
+
+    Writer.prototype.delete = function (arg) {
+        throw new Error();
     };
 
     Writer.prototype.forward = function (arg) {
@@ -86,7 +94,11 @@ exports.Writer = (function WriterClosure() {
 
         undos.reverse();
 
-        console.log('undos', undos);
+        console.log({
+            undos: undos,
+            state: this.gapBuffer.toString(),
+            index: this.gapBuffer.index,
+        });
 
         this.write(undos);
     };
