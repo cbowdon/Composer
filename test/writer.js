@@ -9,6 +9,7 @@ exports.tests = [
         var writer = new Writer('x');
 
         writer.write([
+            { forward: 1 },
             { cut: 1 },
             { insert: 't' },
             { back: 1 },

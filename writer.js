@@ -5,6 +5,16 @@ var GapBuffer = require('./gap-buffer').GapBuffer;
 
 exports.Writer = (function WriterClosure() {
 
+    /*
+        insert: cut
+        forward: back,
+        update: update,
+
+        cut: removes the character before the cursor
+        insert: add character before the cursor
+        update: overwrites the character at the cursor
+    */
+
     function Writer(text) {
         this.gapBuffer  = new GapBuffer(text);
         this.history    = [];
@@ -12,7 +22,11 @@ exports.Writer = (function WriterClosure() {
     }
 
     Writer.prototype.append = function (arg) {
-        throw new Error();
+        var result = this.gapBuffer.append(arg);
+        if (result.success) {
+            return { cut: result.value };
+        }
+        return { noop: 'nothing to undo' };
     };
 
     Writer.prototype.cut = function (arg) {
@@ -32,7 +46,11 @@ exports.Writer = (function WriterClosure() {
     };
 
     Writer.prototype.delete = function (arg) {
-        throw new Error();
+        var result = this.gapBuffer.delete(arg);
+        if (result.success) {
+            return { insert: result.value };
+        }
+        return { noop: 'nothing to undo' };
     };
 
     Writer.prototype.forward = function (arg) {

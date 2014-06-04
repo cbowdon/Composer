@@ -11,70 +11,66 @@ exports.tests = [
 
         assert.strictEqual(gapBuffer.toString(), ', world');
 
-        gapBuffer.insert('H');
-        gapBuffer.insert('e');
-        gapBuffer.insert('l');
-        gapBuffer.insert('l');
-        gapBuffer.insert('o');
+        assert.deepEqual(gapBuffer.insert('H'), { success: true, value: 1 });
+        assert.deepEqual(gapBuffer.insert('e'), { success: true, value: 1 });
+        assert.deepEqual(gapBuffer.insert('l'), { success: true, value: 1 });
+        assert.deepEqual(gapBuffer.insert('l'), { success: true, value: 1 });
+        assert.deepEqual(gapBuffer.insert('o'), { success: true, value: 1 });
 
         assert.strictEqual(gapBuffer.toString(), 'Hello, world');
 
-        gapBuffer.insert(', hello');
+        assert.deepEqual(gapBuffer.insert(', hello'), { success: true, value: 7 });
         assert.strictEqual(gapBuffer.toString(), 'Hello, hello, world');
 
-        gapBuffer.insert([',', ' ', 'h', 'e', 'l', 'l', 'o']);
+        assert.deepEqual(gapBuffer.insert([',', ' ', 'h', 'e', 'l', 'l', 'o']),
+                { success: true, value: 7 });
         assert.strictEqual(gapBuffer.toString(), 'Hello, hello, hello, world');
     },
 
     function GapBuffer_update() {
-        var gapBuffer = new GapBuffer('Hello, world');
+        var gapBuffer = new GapBuffer('Hello');
 
-        gapBuffer.cursorForward();
-        gapBuffer.update('u');
+        gapBuffer.cursorForward(1);
+        assert.strictEqual(gapBuffer.index, 1, 'index before update');
 
+        assert.deepEqual(gapBuffer.update('u'), { success: true, value: 'e' });
+
+        assert.strictEqual(gapBuffer.index, 1, 'index after update');
         assert.deepEqual(gapBuffer.cursorCurrent(), { value: 'u', success: true });
-        assert.strictEqual(gapBuffer.toString(), 'Hullo, world');
+        assert.strictEqual(gapBuffer.toString(), 'Hullo');
+
+        gapBuffer.cursorForward(4);
+        assert.strictEqual(gapBuffer.index, 5, 'index at end');
+        assert.deepEqual(gapBuffer.cursorCurrent(), { success: true, value: null });
+
+        assert.deepEqual(gapBuffer.update('k'), { success: false });
+        assert.strictEqual(gapBuffer.index, 5, 'index at end');
+        assert.strictEqual(gapBuffer.toString(), 'Hullo');
     },
 
     function GapBuffer_cut() {
-        var gapBuffer = new GapBuffer('Hello, world');
-
-        assert.deepEqual(gapBuffer.cut(), { success: true, value: 'H' });
-        assert.strictEqual(gapBuffer.toString(), 'ello, world');
-
-        gapBuffer.cursorForward(2);
-
-        assert.deepEqual(gapBuffer.cut(), { success: true, value: 'l' });
-        assert.strictEqual(gapBuffer.toString(), 'elo, world');
-
-        gapBuffer.cursorForward(7);
-
-        assert.deepEqual(gapBuffer.cut(), { success: true, value: 'd' });
-        assert.strictEqual(gapBuffer.toString(), 'elo, worl');
-
-        gapBuffer.cursorForward(1);
-        assert.deepEqual(gapBuffer.cut(), { success: false });
-        assert.strictEqual(gapBuffer.toString(), 'elo, worl');
-    },
-
-    function GapBuffer_append() {
-        var gapBuffer = new GapBuffer('Hello');
-
-        gapBuffer.append('!');
-        assert.strictEqual(gapBuffer.toString(), 'H!ello');
-
-        gapBuffer.append('?');
-        throw new Error("I'm not sure about this");
-        //assert.strictEqual(gapBuffer.toString(), 'H?!ello');
-    },
-
-    function GapBuffer_delete() {
         var text = 'Hello',
             gapBuffer = new GapBuffer(text);
 
-        assert.deepEqual(gapBuffer.delete(), { success: false }, 'Cursor at 0');
+        assert.deepEqual(gapBuffer.cut(), { success: false }, 'Cursor at 0');
 
-        throw new Error('not finished');
+        gapBuffer.cursorForward(5);
+
+        assert.deepEqual(gapBuffer.cut(), { success: true, value: 'o' }, 'Cursor at 5');
+        assert.strictEqual(gapBuffer.toString(), 'Hell');
+
+        assert.deepEqual(gapBuffer.cut(), { success: true, value: 'l' }, 'Cursor at 4');
+        assert.deepEqual(gapBuffer.cut(), { success: true, value: 'l' }, 'Cursor at 3');
+
+        assert.strictEqual(gapBuffer.toString(), 'He');
+
+        assert.deepEqual(gapBuffer.cut(), { success: true, value: 'e' }, 'Cursor at 2');
+        assert.deepEqual(gapBuffer.cut(), { success: true, value: 'H' }, 'Cursor at 1');
+
+        assert.strictEqual(gapBuffer.toString(), '');
+
+        assert.deepEqual(gapBuffer.cut(), { success: false }, 'Cursor at 0');
+        assert.strictEqual(gapBuffer.toString(), '');
     },
 
     function GapBuffer_cursor() {
