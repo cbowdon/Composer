@@ -19,13 +19,16 @@ exports.InsertInterpreter = (function InsertInterpreterClosure() {
             return this.insertTab();
         }
         if (character === '<Del>') {
+            if (this.buffer.index === this.buffer.length) {
+                return null;
+            }
+            this.cursor.right();
             return this.buffer.cut();
         }
         if (character === '<Backspace>') {
             if (this.buffer.index === 0) {
                 return null;
             }
-            this.cursor.left();
             return this.buffer.cut();
         }
         if (character === '<Left>') {
