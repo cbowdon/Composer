@@ -76,17 +76,44 @@ exports.tests = [
     },
 
     function Writer_redo() {
-        var writer = new Writer('x');
+        var writer = new Writer('x'), i;
 
         writer.write([
-            { cut:      1   },
-            { insert:   't' },
-            { back:     1   },
+            { forward: 1 },
+            { cut: 1 },
+            { insert: 't' },
+            { back: 1 },
+        ]);
+        assert.strictEqual(writer.gapBuffer.toString(), 't');
+
+        for (i = 0; i < 5; i += 1) {
+            writer.undo();
+            assert.strictEqual(writer.gapBuffer.toString(), 'x', i);
+
+            writer.redo();
+            assert.strictEqual(writer.gapBuffer.toString(), 't', i);
+        }
+
+        writer.write([
+            { forward: 1 },
+            { cut: 1 },
+        ]);
+        writer.write([
+            { insert: 'k' },
+            { back: 1 },
         ]);
 
-        writer.undo();
-        writer.redo();
+        assert.strictEqual(writer.gapBuffer.toString(), 'k', 'Write double');
 
-        assert.strictEqual(writer.gapBuffer.toString(), 't');
+        writer.undo();
+        writer.undo();
+        assert.strictEqual(writer.gapBuffer.toString(), 't', 'Undo double');
+
+        writer.redo();
+        writer.redo();
+        assert.strictEqual(writer.gapBuffer.toString(), 'k', 'Redo double');
+
+        writer.redo();
+        assert.strictEqual(writer.gapBuffer.toString(), 'k', 'Nothing to redo');
     },
 ];

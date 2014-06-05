@@ -82,6 +82,8 @@ exports.Writer = (function WriterClosure() {
         });
     }
 
+    function undo(act) { return act.undo; }
+
     Writer.prototype.write = function (acts) {
         var results = write(this, acts);
 
@@ -91,7 +93,7 @@ exports.Writer = (function WriterClosure() {
     };
 
     Writer.prototype.undo = function () {
-        var dos, undos;
+        var dos, undos, redos;
 
         dos = this.history.pop();
 
@@ -99,14 +101,29 @@ exports.Writer = (function WriterClosure() {
             return;
         }
 
-        undos = dos.map(function (act) { return act.undo; });
+        undos = dos.map(undo);
 
         undos.reverse();
 
-        write(this, undos);
+        redos = write(this, undos);
+
+        redos.reverse();
+
+        this.future.push(redos.map(undo));
     };
 
     Writer.prototype.redo = function () {
+        var undos, redos;
+
+        redos = this.future.pop();
+
+        if (!redos) {
+            return;
+        }
+
+        undos = write(this, redos);
+
+        this.history.push(undos);
     };
 
     return Writer;
