@@ -82,8 +82,6 @@ exports.Writer = (function WriterClosure() {
         });
     }
 
-    function undo(act) { return act.undo; }
-
     Writer.prototype.write = function (acts) {
         var results = write(this, acts);
 
@@ -94,6 +92,8 @@ exports.Writer = (function WriterClosure() {
 
     Writer.prototype.undo = function () {
         var dos, undos, redos;
+
+        function undo(act) { return act.undo; }
 
         dos = this.history.pop();
 

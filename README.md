@@ -22,29 +22,39 @@ The idea is to make an editor that:
 ### Roadmap
 MVP etc. etc.
 
-* v0.0.x
-- Insert mode.
-- Basic GUI, keyboard input setup.
+Key
+---
+* Version
++ Denotes user-facing features.
+- Denotes internal features.
+---
 
-* v0.1.x
-- Adds normal mode cursor movement.
+* v0.0.x **DONE**
++ Insert mode.
++ Basic GUI, keyboard input setup.
+
+* v0.1.x **IN PROGRESS**
++ Adds normal mode cursor movement.
++ Adds undo.
+- Testable interpreters.
+- Migrate to TypeScript? Or start using Mocha + Blanket for code coverage? Both?
 
 * v0.2.x
-- Adds normal mode operators like change and delete.
-- Adds undo.
-- Adds copy-paste.
++ Adds normal mode operators like change and delete.
++ Adds copy-paste.
+- Adds extensible lib.
 
 * v0.3.x
-- Adds command mode.
++ Adds command mode.
 
 * v0.4.x
-- Adds multiple buffers.
++ Adds multiple buffers.
 
 * v0.5.x
-- Evil: adds (optional) JS eval mode
++ Evil: adds (optional) JS eval mode
 
 * v0.6.x
-- Support for other browsers.
++ Support for other browsers.
 
 ### Architecture
 
