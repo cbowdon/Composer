@@ -8,6 +8,7 @@ exports.tests = [
     function Writer_write() {
         var writer = new Writer('x');
 
+        // simulating an update
         writer.write([
             { forward: 1 },
             { cut: 1 },
@@ -17,28 +18,30 @@ exports.tests = [
 
         assert.strictEqual(writer.gapBuffer.toString(), 't');
 
+        writer.write([ { update: 'k' } ]);
+
+        assert.strictEqual(writer.gapBuffer.toString(), 'k');
+
         writer.write([
-            { forward: 3 },
+            { forward: 1 },
             { insert: 'ing' },
             { back: 3 },
         ]);
 
-        assert.strictEqual(writer.gapBuffer.toString(), 'ting');
+        assert.strictEqual(writer.gapBuffer.toString(), 'king');
     },
 
     function Writer_undo() {
         var writer = new Writer('x');
 
-        console.log('###########################');
         writer.write([
+            { forward: 1 },
             { cut: 1 },
             { insert: 't' },
             { back: 1 },
         ]);
-        console.log('###########################');
 
         writer.undo();
-        console.log('###########################');
 
         assert.strictEqual(writer.gapBuffer.toString(), 'x', 'Basic undo');
 

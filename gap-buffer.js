@@ -155,10 +155,26 @@ exports.GapBuffer = (function GapBufferClosure() {
             return result;
         };
 
-        this.cut = function () {
-            var result = cut(before, after);
+        this.cut = function (number) {
+            var n, i, result = [];
+
+            n = number === 0 ? 0 : number || 1;
+
+            if (this.index < n) {
+                return { success: false };
+            }
+
+            for (i = 0; i < n; i += 1) {
+                result.push(cut(before, after));
+            }
+
+            result.reverse();
+
             this.fireListeners('change', this);
-            return result;
+            return {
+                success: true,
+                value: result.map(function (r) { return r.value; }).join('')
+            };
         };
 
         this.insert = function (arg) {

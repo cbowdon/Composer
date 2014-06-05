@@ -59,8 +59,7 @@ exports.tests = [
         assert.deepEqual(gapBuffer.cut(), { success: true, value: 'o' }, 'Cursor at 5');
         assert.strictEqual(gapBuffer.toString(), 'Hell');
 
-        assert.deepEqual(gapBuffer.cut(), { success: true, value: 'l' }, 'Cursor at 4');
-        assert.deepEqual(gapBuffer.cut(), { success: true, value: 'l' }, 'Cursor at 3');
+        assert.deepEqual(gapBuffer.cut(2), { success: true, value: 'll' }, 'Cursor at 4');
 
         assert.strictEqual(gapBuffer.toString(), 'He');
 
@@ -71,6 +70,15 @@ exports.tests = [
 
         assert.deepEqual(gapBuffer.cut(), { success: false }, 'Cursor at 0');
         assert.strictEqual(gapBuffer.toString(), '');
+
+        gapBuffer.load('world');
+        gapBuffer.cursorForward(2);
+        assert.deepEqual(gapBuffer.cut(4), { success: false });
+        assert.deepEqual(gapBuffer.cut(), { success: true, value: 'o' });
+        assert.strictEqual(gapBuffer.toString(), 'wrld');
+
+        gapBuffer.cursorForward(3);
+        assert.deepEqual(gapBuffer.cut(3), { success: true, value: 'rld' });
     },
 
     function GapBuffer_cursor() {

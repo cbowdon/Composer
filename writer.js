@@ -21,8 +21,8 @@ exports.Writer = (function WriterClosure() {
         this.future     = [];
     }
 
-    Writer.prototype.append = function (arg) {
-        var result = this.gapBuffer.append(arg);
+    Writer.prototype.update = function (arg) {
+        var result = this.gapBuffer.update(arg);
         if (result.success) {
             return { cut: result.value };
         }
@@ -41,14 +41,6 @@ exports.Writer = (function WriterClosure() {
         var result = this.gapBuffer.insert(arg);
         if (result.success) {
             return { cut: arg.length };
-        }
-        return { noop: 'nothing to undo' };
-    };
-
-    Writer.prototype.delete = function (arg) {
-        var result = this.gapBuffer.delete(arg);
-        if (result.success) {
-            return { insert: result.value };
         }
         return { noop: 'nothing to undo' };
     };
@@ -73,11 +65,8 @@ exports.Writer = (function WriterClosure() {
         return { noop: 'nothing to undo' };
     };
 
-    Writer.prototype.write = function (acts) {
-        var that = this,
-            results;
-
-        results = acts.map(function (it) {
+    function write(that, acts) {
+        return acts.map(function (it) {
             var keys    = Object.keys(it),
                 key     = keys[0],
                 result  = {};
@@ -89,14 +78,12 @@ exports.Writer = (function WriterClosure() {
             result[key] = it[key];
             result.undo = that[key](it[key]);
 
-            console.log({
-                result: result,
-                state: that.gapBuffer.toString(),
-                index: that.gapBuffer.index,
-            });
-
             return result;
         });
+    }
+
+    Writer.prototype.write = function (acts) {
+        var results = write(this, acts);
 
         this.history.push(results);
 
@@ -108,17 +95,15 @@ exports.Writer = (function WriterClosure() {
 
         dos = this.history.pop();
 
+        if (!dos) {
+            return;
+        }
+
         undos = dos.map(function (act) { return act.undo; });
 
         undos.reverse();
 
-        console.log({
-            undos: undos,
-            state: this.gapBuffer.toString(),
-            index: this.gapBuffer.index,
-        });
-
-        this.write(undos);
+        write(this, undos);
     };
 
     Writer.prototype.redo = function () {
