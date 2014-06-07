@@ -116,4 +116,17 @@ exports.tests = [
         writer.redo();
         assert.strictEqual(writer.gapBuffer.toString(), 'k', 'Nothing to redo');
     },
+
+    function Writer_rollback() {
+        var text = 'test',
+            writer = new Writer(text);
+
+        writer.write([
+            { forward: 1 },
+            { insert: 'x' },
+            { cut: 5 }
+        ]);
+
+        assert.strictEqual(writer.gapBuffer.toString(), text, 'No change on error');
+    },
 ];

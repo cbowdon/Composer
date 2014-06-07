@@ -65,20 +65,24 @@ exports.Writer = (function WriterClosure() {
         return { noop: 'nothing to undo' };
     };
 
+    function writeSingle(that, act) {
+        var keys    = Object.keys(act),
+            key     = keys[0],
+            result  = {};
+
+        if (keys.length !== 1) {
+            throw new TypeError('Expecting one instruction per block: ' + keys);
+        }
+
+        result[key] = act[key];
+        result.undo = that[key](act[key]);
+
+        return result;
+    }
+
     function write(that, acts) {
-        return acts.map(function (it) {
-            var keys    = Object.keys(it),
-                key     = keys[0],
-                result  = {};
-
-            if (keys.length !== 1) {
-                throw new TypeError('Expecting one instruction per block: ' + keys);
-            }
-
-            result[key] = it[key];
-            result.undo = that[key](it[key]);
-
-            return result;
+        return acts.map(function (act) {
+            return writeSingle(that, act);
         });
     }
 
